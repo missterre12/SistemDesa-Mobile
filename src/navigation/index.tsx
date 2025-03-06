@@ -1,105 +1,108 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HeaderButton, Text } from '@react-navigation/elements';
-import {
-  createStaticNavigation,
-  StaticParamList,
-} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image } from 'react-native';
-import bell from '../assets/bell.png';
-import newspaper from '../assets/newspaper.png';
-import { Home } from './screens/Home';
-import { Profile } from './screens/Profile';
-import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
-import { NotFound } from './screens/NotFound';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Image } from "react-native"; 
+import HomeScreen from "../screens/Home";
+import LayananScreen from "../screens/LayananScreen";
+import LaporanScreen from "../screens/LaporanScreen";
+import BeritaScreen from "../screens/BeritaScreen";
 
-const HomeTabs = createBottomTabNavigator({
-  screens: {
-    Home: {
-      screen: Home,
-      options: {
-        title: 'Feed',
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={newspaper}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    },
-    Updates: {
-      screen: Updates,
-      options: {
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={bell}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    },
-  },
-});
+import homeIcon from '../assets/home.png';
+import paperPlaneIcon from '../assets/surat.png';
+import clipboardIcon from '../assets/report.png';
+import newspaperIcon from '../assets/news.png';
 
-const RootStack = createNativeStackNavigator({
-  screens: {
-    HomeTabs: {
-      screen: HomeTabs,
-      options: {
-        title: 'Home',
+const Tab = createBottomTabNavigator();
+
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
         headerShown: false,
-      },
-    },
-    Profile: {
-      screen: Profile,
-      linking: {
-        path: ':user(@[a-zA-Z0-9-_]+)',
-        parse: {
-          user: (value) => value.replace(/^@/, ''),
+        tabBarStyle: { 
+          backgroundColor: "#f8f8f8", 
+          paddingBottom: 5 
         },
-        stringify: {
-          user: (value) => `@${value}`,
-        },
-      },
-    },
-    Settings: {
-      screen: Settings,
-      options: ({ navigation }) => ({
-        presentation: 'modal',
-        headerRight: () => (
-          <HeaderButton onPress={navigation.goBack}>
-            <Text>Close</Text>
-          </HeaderButton>
-        ),
-      }),
-    },
-    NotFound: {
-      screen: NotFound,
-      options: {
-        title: '404',
-      },
-      linking: {
-        path: '*',
-      },
-    },
-  },
-});
+        tabBarActiveTintColor: "#007bff",
+      }}
+    >
+      <Tab.Screen 
+        name="Beranda" 
+        component={HomeScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Image
+              source={homeIcon}
+              style={{ 
+                width: size, 
+                height: size,
+                tintColor: color
+              }}
+            />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="Layanan Surat" 
+        component={LayananScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Image
+              source={paperPlaneIcon}
+              style={{ 
+                width: size, 
+                height: size,
+                tintColor: color
+              }}
+            />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="Laporan" 
+        component={LaporanScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Image
+              source={clipboardIcon}
+              style={{ 
+                width: size, 
+                height: size,
+                tintColor: color
+              }}
+            />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="Berita" 
+        component={BeritaScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Image
+              source={newspaperIcon}
+              style={{ 
+                width: size, 
+                height: size,
+                tintColor: color
+              }}
+            />
+          )
+        }} 
+      />
+    </Tab.Navigator>
+  );
+}
 
-export const Navigation = createStaticNavigation(RootStack);
+const Stack = createNativeStackNavigator();
 
-type RootStackParamList = StaticParamList<typeof RootStack>;
-
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
-  }
+export default function AppNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Main" component={MainTabs} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
