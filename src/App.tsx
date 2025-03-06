@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Image } from "react-native";
 import HomeScreen from "./screens/Home";
 import LayananScreen from "./screens/LayananScreen";
 import LaporanScreen from "./screens/LaporanScreen";
@@ -27,17 +28,86 @@ export function App() {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ["helloworld://"], // Sesuaikan dengan skema app.json
+        prefixes: ["helloworld://"], 
       }}
       onReady={() => {
         SplashScreen.hideAsync();
       }}
     >
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Layanan" component={LayananScreen} />
-        <Tab.Screen name="Laporan" component={LaporanScreen} />
-        <Tab.Screen name="Berita" component={BeritaScreen} />
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: "#f8f8f8",
+            paddingBottom: 5
+          },
+          tabBarActiveTintColor: "#007bff",
+        }}
+      >
+        <Tab.Screen
+          name="Beranda"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={require("./assets/home.png")}
+                style={{
+                  width: size,
+                  height: size,
+                  tintColor: color
+                }}
+              />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="Layanan Surat"
+          component={LayananScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={require("./assets/surat.png")}
+                style={{
+                  width: size,
+                  height: size,
+                  tintColor: color
+                }}
+              />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="Laporan"
+          component={LaporanScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={require("./assets/report.png")}
+                style={{
+                  width: size,
+                  height: size,
+                  tintColor: color
+                }}
+              />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="Berita"
+          component={BeritaScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={require("./assets/news.png")}
+                style={{
+                  width: size,
+                  height: size,
+                  tintColor: color
+                }}
+              />
+            )
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
