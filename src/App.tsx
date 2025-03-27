@@ -6,16 +6,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
 import HomeScreen from "./screens/Home";
-import LayananScreen from "./screens/LayananScreen";
 import LaporanScreen from "./screens/LaporanScreen";
 import BeritaScreen from "./screens/BeritaScreen";
+import LayananStackNavigator from "./navigation/LayananStackNavigator"; // Import LayananStackNavigator
 
 Asset.loadAsync([
   ...NavigationAssets,
-  require("./assets/home.png"),
-  require("./assets/surat.png"),
-  require("./assets/report.png"),
-  require("./assets/news.png"),
+  require("./assets/navigations/home.png"),
+  require("./assets/navigations/surat.png"),
+  require("./assets/navigations/report.png"),
+  require("./assets/navigations/news.png"),
 ]);
 
 // Mencegah splash screen hilang otomatis
@@ -28,7 +28,7 @@ export function App() {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ["helloworld://"], 
+        prefixes: ["helloworld://"],
       }}
       onReady={() => {
         SplashScreen.hideAsync();
@@ -41,7 +41,7 @@ export function App() {
             backgroundColor: "#f8f8f8",
             paddingBottom: 5
           },
-          tabBarActiveTintColor: "#007bff",
+          tabBarActiveTintColor: "#0F766E",
         }}
       >
         <Tab.Screen
@@ -50,7 +50,7 @@ export function App() {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require("./assets/home.png")}
+                source={require("./assets/navigations/home.png")}
                 style={{
                   width: size,
                   height: size,
@@ -62,11 +62,11 @@ export function App() {
         />
         <Tab.Screen
           name="Layanan Surat"
-          component={LayananScreen}
+          component={LayananStackNavigator} // Gunakan LayananStackNavigator di sini
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require("./assets/surat.png")}
+                source={require("./assets/navigations/surat.png")}
                 style={{
                   width: size,
                   height: size,
@@ -82,7 +82,7 @@ export function App() {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require("./assets/report.png")}
+                source={require("./assets/navigations/report.png")}
                 style={{
                   width: size,
                   height: size,
@@ -98,7 +98,7 @@ export function App() {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require("./assets/news.png")}
+                source={require("./assets/navigations/news.png")}
                 style={{
                   width: size,
                   height: size,

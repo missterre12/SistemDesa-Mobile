@@ -5,9 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image } from "react-native";
 
 import HomeScreen from "../screens/Home";
-import LayananScreen from "../screens/LayananScreen";
 import LaporanScreen from "../screens/LaporanScreen";
 import BeritaScreen from "../screens/BeritaScreen";
+import LayananStackNavigator from "./LayananStackNavigator"; // Import LayananStackNavigator
 
 const Tab = createBottomTabNavigator();
 
@@ -17,10 +17,10 @@ function MainTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#f8f8f8",
+          backgroundColor: "#0F766E",
           paddingBottom: 5
         },
-        tabBarActiveTintColor: "#007bff",
+        tabBarActiveTintColor: "#0F766E",
       }}
     >
       <Tab.Screen
@@ -29,7 +29,7 @@ function MainTabs() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../assets/home.png')}
+              source={require('../assets/navigations/home.png')}
               style={{
                 width: size,
                 height: size,
@@ -41,11 +41,11 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Layanan Surat"
-        component={LayananScreen}
+        component={LayananStackNavigator} // Gunakan LayananStackNavigator di sini
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../assets/surat.png')}
+              source={require('../assets/navigations/surat.png')}
               style={{
                 width: size,
                 height: size,
@@ -61,7 +61,7 @@ function MainTabs() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../assets/report.png')}
+              source={require('../assets/navigations/report.png')}
               style={{
                 width: size,
                 height: size,
@@ -77,7 +77,7 @@ function MainTabs() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../assets/news.png')}
+              source={require('../assets/navigations/news.png')}
               style={{
                 width: size,
                 height: size,
