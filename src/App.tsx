@@ -62,18 +62,18 @@ export function App() {
         />
         <Tab.Screen
           name="Layanan Surat"
-          component={LayananStackNavigator} // Gunakan LayananStackNavigator di sini
+          component={LayananStackNavigator}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require("./assets/navigations/surat.png")}
-                style={{
-                  width: size,
-                  height: size,
-                  tintColor: color
-                }}
+                  source={require("./assets/navigations/surat.png")}
+                  style={{
+                      width: size,
+                      height: size,
+                      tintColor: color
+                  }}
               />
-            )
+            ),
           }}
         />
         <Tab.Screen
