@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Plus } from 'lucide-react-native';
-import TambahDataModal from '../components/ModalLaporan'; // Import komponen modal
+import TambahDataModal from '../components/ModalLaporan'; 
 
 const FAB: React.FC = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);

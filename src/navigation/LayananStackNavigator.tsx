@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import LayananScreen from "../screens/LayananScreen";
-import AjukanSuratScreen from "../screens/AjukanSurat"; // Import screen AjukanSurat
+import AjukanSuratScreen from "../screens/AjukanSurat"; 
 
 // Buat stack navigator
 const Stack = createStackNavigator();
