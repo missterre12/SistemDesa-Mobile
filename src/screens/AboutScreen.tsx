@@ -1,7 +1,8 @@
 import React from "react";
-import { View, ScrollView, SafeAreaView, StatusBar, StyleSheet } from "react-native";
-import Header from "../header/index";
+import { View, ScrollView, SafeAreaView, StyleSheet } from "react-native";
 import SectionHeader from "../components/SectionHeader";
+import Tentang from "../components/ui/InfoSection1"
+import Visi from "../components/ui/InfoSection2"
 
 const AboutScreen = () => {
    return (
@@ -11,7 +12,9 @@ const AboutScreen = () => {
                <SectionHeader 
                      title="Tentang Desa" 
                      subtitle="Informasi terbaru seputar kegiatan tentang desa" 
-                  />
+               />
+               <Tentang />
+               <Visi />
             </View>
          </ScrollView>
       </SafeAreaView>

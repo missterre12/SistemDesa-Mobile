@@ -39,7 +39,7 @@ const HowToApply: React.FC = () => {
    const navigation = useNavigation<StackNavigationProp<LayananStackParamList>>(); // Gunakan type yang sesuai
 
    const handleAjukanSurat = () => {
-      navigation.navigate("AjukanSurat"); // Langsung navigasi ke AjukanSurat
+      navigation.navigate("AjukanSurat");
    };
 
    return (
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
       margin: 10,
       padding: 15,
       borderRadius: 10,
-      backgroundColor: "#F5F5F5",
+      backgroundColor: "#FFFFFF",
    },
    title: {
       fontWeight: "bold",
