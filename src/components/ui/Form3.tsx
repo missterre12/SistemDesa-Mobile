@@ -30,15 +30,15 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
 
       console.log(`Memilih file untuk ${type === 'ktp' ? 'KTP' : 'Kartu Keluarga'}`);
       if (type === 'ktp') {
-         setScanKTP('nama_file_ktp.jpg'); // Contoh nama file
+         setScanKTP('nama_file_ktp.jpg');
       } else {
-         setScanKK('nama_file_kk.png'); // Contoh nama file
+         setScanKK('nama_file_kk.png'); 
       }
    };
 
    const handleSubmit = () => {
       if (isAgreed) {
-         onDataChange({ scanKTP, scanKK, setujuPernyataan: isAgreed }); // Kirim status persetujuan
+         onDataChange({ scanKTP, scanKK, setujuPernyataan: isAgreed }); 
          onSubmit();
       } else {
          alert('Harap setujui pernyataan di atas.');
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
       color: 'gray',
    },
    submitButton: {
-      backgroundColor: 'teal',
+      backgroundColor: '#003C43',
       borderRadius: 5,
       paddingVertical: 15,
       paddingHorizontal: 20,

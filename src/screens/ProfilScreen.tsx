@@ -1,7 +1,7 @@
 // File: screens/ProfilScreen.tsx
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import { UserCircle, Edit, LogOut } from "lucide-react-native";
@@ -14,14 +14,20 @@ const ProfilScreen: React.FC = () => {
    };
 
    const handleLogout = () => {
-      console.log("Logout ditekan");
+      // Reset navigation stack agar kembali ke LoginScreen
+      navigation.dispatch(
+         CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+         })
+      );
    };
 
    return (
       <View style={styles.container}>
          {/* Ikon Profil */}
          <UserCircle size={100} color="#0F766E" style={styles.profileIcon} />
-         
+
          {/* Nama dan Email */}
          <Text style={styles.name}>John Doe</Text>
          <Text style={styles.email}>johndoe@email.com</Text>

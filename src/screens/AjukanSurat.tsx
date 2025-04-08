@@ -8,7 +8,7 @@ import InputSurat from "../components/MultiInput"
 const LayananScreen = () => {
    return (
       <SafeAreaView style={styles.container}>
-         <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
+         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
          <Header />
          <ScrollView style={styles.scrollView}>
             <View style={styles.main}>

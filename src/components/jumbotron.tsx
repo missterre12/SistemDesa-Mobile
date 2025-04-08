@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
       borderColor: "#ccc",
    },
    button: {
-      backgroundColor: "#004d40",
+      backgroundColor: "#003C43",
    },
    image: {
       width: 110,
       height: 110,
       marginTop: -40,
       marginBottom: 20,
-  },
+   },
 });
 
 export default Jumbotron;

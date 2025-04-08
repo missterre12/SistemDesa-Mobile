@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons'; // Contoh untuk ikon kalender
+import { Feather } from '@expo/vector-icons'; 
 
 interface Form1Data {
    nik?: string;
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
       color: 'gray',
    },
    nextButton: {
-      backgroundColor: 'teal',
+      backgroundColor: '#003C43',
       borderRadius: 5,
       paddingVertical: 15,
       alignItems: 'center',

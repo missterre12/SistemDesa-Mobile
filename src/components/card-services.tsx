@@ -25,7 +25,7 @@ const Services: React.FC = () => {
       {
          title: "Laporan Masyarakat",
          image: require("../assets/menu/laporan-masyarakat.png"),
-         backgroundColor: "#004d40",
+         backgroundColor: "#003C43",
          textColor: "#FFF",
          onPress: () => console.log("Laporan Masyarakat diklik"),
       },
@@ -39,7 +39,7 @@ const Services: React.FC = () => {
          title: "Tentang Desa",
          image: require("../assets/menu/Tentang-Aplikasi.png"),
          backgroundColor: "#F5F5F5",
-         onPress: handleNavigateToAbout, // Navigasi ke AboutScreen
+         onPress: handleNavigateToAbout,
       },
    ];
 

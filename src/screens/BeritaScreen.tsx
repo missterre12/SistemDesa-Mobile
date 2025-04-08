@@ -18,7 +18,7 @@ const BeritaScreen = () => {
                   />
                   <SearchBar onSearch={(text) => console.log("Search:", text)} />
                   <ReportCard 
-                     imageUrl=""
+                     imageUrl="../assets/navigations/news.png"
                      date="10 Juni 2025" 
                      title="Sampah Menumpuk" 
                      description="Sampah menumpuk di pinggir sungai dan menimbulkan bau. Mohon segera dibersihkan untuk mencegah penyebaran penyakit dan pencemaran sungai."
@@ -29,7 +29,7 @@ const BeritaScreen = () => {
                      buttonLabel="Baca Selengkapnya"
                   />
                   <ReportCard 
-                     imageUrl=""
+                     imageUrl="../assets/navigations/news.png"
                      date="15 Juni 2025" 
                      title="Pembangunan Jalan Desa" 
                      description="Pembangunan jalan desa tahap pertama telah selesai. Warga diminta memberikan masukan untuk tahap selanjutnya."

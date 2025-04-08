@@ -135,14 +135,13 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 15,
-    // Style khusus untuk Android agar Picker tidak aneh
     ...(Platform.OS === 'android' && {
       paddingHorizontal: 10,
       paddingVertical: 5,
     }),
   },
   picker: {
-    height: 50, // Sesuaikan tinggi picker
+    height: 50, 
   },
   navigationButtons: {
     flexDirection: 'row',
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   nextButton: {
-    backgroundColor: 'teal',
+    backgroundColor: '#003C43',
     borderRadius: 5,
     paddingVertical: 15,
     paddingHorizontal: 30,

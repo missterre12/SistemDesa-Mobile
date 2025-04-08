@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Form1 from '../components/ui/Form1';
 import Form2 from '../components/ui/Form2';
 import Form3 from '../components/ui/Form3';
-import UpperNavigation from '../components/UpperNavigation'; // Sesuaikan path jika berbeda
+import UpperNavigation from '../components/UpperNavigation';
 
 interface Form1Data {
    nama?: string;
