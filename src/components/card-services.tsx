@@ -3,10 +3,10 @@ import React from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { Card, Text, TouchableRipple } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 
-type ServicesNavigationProp = BottomTabNavigationProp<ParamListBase>;
+type ServicesNavigationProp = StackNavigationProp<ParamListBase>;
 
 const Services: React.FC = () => {
    const navigation = useNavigation<ServicesNavigationProp>();
@@ -15,25 +15,37 @@ const Services: React.FC = () => {
       navigation.navigate("Tentang Desa");
    };
 
+   const handleNavigateToBerita = () => {
+      navigation.navigate("Berita Desa");
+   };
+
+   const handleNavigateToLayanan = () => {
+      navigation.navigate("Layanan Desa");
+   };
+
+   const handleNavigateToLaporan = () => {
+      navigation.navigate("Laporan Desa");
+   };
+
    const services = [
       {
          title: "Layanan Surat",
-         image: require("../assets/menu/layanan-surat.png"), 
+         image: require("../assets/menu/layanan-surat.png"),
          backgroundColor: "#F5F5F5",
-         onPress: () => console.log("Layanan Surat diklik"),
+         onPress:  handleNavigateToLayanan,
       },
       {
          title: "Laporan Masyarakat",
          image: require("../assets/menu/laporan-masyarakat.png"),
          backgroundColor: "#003C43",
          textColor: "#FFF",
-         onPress: () => console.log("Laporan Masyarakat diklik"),
+         onPress: handleNavigateToLaporan,
       },
       {
          title: "Berita Desa",
          image: require("../assets/menu/Berita-Desa.png"),
          backgroundColor: "#F5F5F5",
-         onPress: () => console.log("Berita Desa diklik"),
+         onPress: handleNavigateToBerita,
       },
       {
          title: "Tentang Desa",
@@ -57,6 +69,7 @@ const Services: React.FC = () => {
                   key={index}
                   onPress={service.onPress}
                   rippleColor="rgba(0, 0, 0, 0.2)"
+                  style={styles.ripple}
                >
                   <Card style={[styles.card, { backgroundColor: service.backgroundColor }]}>
                      <Card.Content style={styles.cardContent}>
@@ -93,6 +106,10 @@ const styles = StyleSheet.create({
       flexWrap: "wrap",
       justifyContent: "center",
       gap: 10,
+   },
+   ripple: {
+      margin: 5,
+      borderRadius: 10,
    },
    card: {
       width: 150,

@@ -1,10 +1,10 @@
-// File: navigation/CardStackNavigator.tsx
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/Home"; 
-import Services from "../components/card-services"; 
 import AboutScreen from "../screens/AboutScreen"; 
+import BeritaDesaScreen from "../screens/BeritaScreen";
+import LayananScreen from "../screens/LayananScreen"
+import LaporanScreen from "../screens/LaporanScreen";
 import MainTabs from "../header/index";
-// import ProfilScreen from "../screens/ProfilScreen"
 
 const Stack = createStackNavigator();
 
@@ -12,10 +12,11 @@ export default function CardStackNavigator() {
    return (
       <Stack.Navigator initialRouteName="Home">
          <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-         <Stack.Screen name="Services" component={Services} />
          <Stack.Screen name="Tentang Desa" component={AboutScreen} />
+         <Stack.Screen name="Layanan Desa" component={LayananScreen} />
+         <Stack.Screen name="Berita Desa" component={BeritaDesaScreen} />
+         <Stack.Screen name="Laporan Desa" component={LaporanScreen}/>
          <Stack.Screen name="Main" component={MainTabs} />
-         {/* <Stack.Screen name="Profil" component={ProfilScreen} />  */}
       </Stack.Navigator>
    );
 }
