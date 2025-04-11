@@ -21,7 +21,7 @@ const FAB: React.FC = () => {
             <TambahDataModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
-            onSubmit={handleOnSubmit} // Kirimkan prop onSubmit dengan fungsi handleOnSubmit
+            onSubmit={handleOnSubmit}
             />
         </View>
     );

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Modal, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
 type TambahDataModalProps = {
     visible: boolean;
     onClose: () => void;
-    onSubmit: (data: { 
-        namaPelapor: string; 
-        tanggal: string; 
-        keluhan: string; 
-        deskripsi: string; 
-        lokasi: string; 
+    onSubmit: (data: {
+        namaPelapor: string;
+        tanggal: string;
+        keluhan: string;
+        deskripsi: string;
+        lokasi: string;
         image: string | null;
     }) => void;
 };
@@ -49,19 +49,25 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
                 <View style={styles.modalContent}>
                     <Text style={styles.label}>Nama Pelapor</Text>
                     <TextInput style={styles.input} value={namaPelapor} onChangeText={setNamaPelapor} placeholder="Masukkan nama" />
-                    
+
                     <Text style={styles.label}>Tanggal</Text>
                     <TextInput style={styles.input} value={tanggal} onChangeText={setTanggal} placeholder="YYYY-MM-DD" />
-                    
+
                     <Text style={styles.label}>Keluhan</Text>
                     <TextInput style={styles.input} value={keluhan} onChangeText={setKeluhan} placeholder="Masukkan keluhan" />
-                    
+
                     <Text style={styles.label}>Deskripsi Keluhan</Text>
-                    <TextInput style={styles.input} value={deskripsi} onChangeText={setDeskripsi} placeholder="Deskripsi keluhan" multiline />
-                    
+                    <TextInput
+                        style={styles.inputs}
+                        value={deskripsi}
+                        onChangeText={setDeskripsi}
+                        placeholder="Deskripsi keluhan"
+                        multiline 
+                    />
+
                     <Text style={styles.label}>Lokasi Laporan</Text>
                     <TextInput style={styles.input} value={lokasi} onChangeText={setLokasi} placeholder="Masukkan lokasi" />
-                    
+
                     {/* Input Bukti Laporan (File Upload) */}
                     <Text style={styles.label}>Bukti Laporan</Text>
                     <View style={styles.fileInputContainer}>
@@ -74,7 +80,7 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.fileInfo}>Format: JPG, PNG, atau PDF. Maks: 2MB</Text>
-                    
+
                     {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
 
                     {/* Tombol Batal & Simpan (Sejajar) */}
@@ -112,6 +118,14 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
+        padding: 8,
+        marginTop: 5,
+        borderRadius: 5,
+    },
+    inputs : {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        height: 60,
         padding: 8,
         marginTop: 5,
         borderRadius: 5,

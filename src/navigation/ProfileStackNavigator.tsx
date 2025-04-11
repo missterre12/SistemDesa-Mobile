@@ -10,8 +10,11 @@ const Stack = createNativeStackNavigator();
 
 const ProfileStackNavigator: React.FC<Props> = ({ setIsLoggedIn }) => {
    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-         <Stack.Screen name="Profil" >
+      <Stack.Navigator screenOptions={{ headerShown: true }}>
+         <Stack.Screen
+         name="Profil"
+         options={{ title: "Profil" }}
+         >
          {(props) => <ProfilScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
          </Stack.Screen>
       </Stack.Navigator>

@@ -29,7 +29,7 @@ const LoginScreen: React.FC<Props> = ({ navigation, onLoginSuccess }) => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    if (email === 'user' && password === 'password') {
+    if (email === '12' && password === '12') {
       setLoading(false);
       onLoginSuccess();
     } else {
