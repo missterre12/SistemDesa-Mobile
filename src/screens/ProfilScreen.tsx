@@ -1,58 +1,70 @@
-// File: screens/ProfilScreen.tsx
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { ParamListBase } from "@react-navigation/native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { UserCircle, Edit, LogOut } from "lucide-react-native";
 
-const ProfilScreen: React.FC = () => {
-   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+type Props = {
+   setIsLoggedIn: (val: boolean) => void;
+};
 
+const ProfilScreen: React.FC<Props> = ({ setIsLoggedIn }) => {
    const handleEditProfile = () => {
       console.log("Edit Profil ditekan");
    };
 
    const handleLogout = () => {
-      // Reset navigation stack agar kembali ke LoginScreen
-      navigation.dispatch(
-         CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-         })
+      Alert.alert(
+         "Konfirmasi Logout",
+         "Apakah Anda yakin ingin keluar?",
+         [
+         {
+            text: "Batal",
+            style: "cancel",
+         },
+         {
+            text: "Ya, Logout",
+            onPress: () => {
+               setIsLoggedIn(false);
+            },
+         },
+         ]
       );
    };
 
    return (
-      <View style={styles.container}>
-         {/* Ikon Profil */}
+      <SafeAreaView style={styles.safeArea}>
+         <View style={styles.container}>
          <UserCircle size={100} color="#0F766E" style={styles.profileIcon} />
-
-         {/* Nama dan Email */}
          <Text style={styles.name}>John Doe</Text>
          <Text style={styles.email}>johndoe@email.com</Text>
 
-         {/* Tombol Edit Profil */}
          <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
             <Edit size={20} color="#FFF" style={styles.icon} />
             <Text style={styles.buttonText}>Edit Profil</Text>
          </TouchableOpacity>
 
-         {/* Tombol Logout */}
-         <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
+         <TouchableOpacity
+            style={[styles.button, styles.logoutButton]}
+            onPress={handleLogout}
+            activeOpacity={0.7}
+         >
             <LogOut size={20} color="#FFF" style={styles.icon} />
             <Text style={styles.buttonText}>Logout</Text>
          </TouchableOpacity>
-      </View>
+         </View>
+      </SafeAreaView>
    );
 };
 
 const styles = StyleSheet.create({
+   safeArea: {
+      flex: 1,
+      backgroundColor: "#F5F5F5", // Optional: Match background color
+   },
    container: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#F5F5F5",
    },
    profileIcon: {
       marginBottom: 15,
@@ -75,6 +87,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
       borderRadius: 8,
       marginTop: 10,
+      width: 200,
+      justifyContent: "center",
    },
    logoutButton: {
       backgroundColor: "#D32F2F",

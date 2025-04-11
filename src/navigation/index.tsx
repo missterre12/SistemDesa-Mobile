@@ -1,4 +1,3 @@
-// navigation/index.tsx
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,7 +10,7 @@ import ProfileStackNavigator from "./ProfileStackNavigator";
 import { Assets as NavigationAssets } from "@react-navigation/elements";
 import { Asset } from "expo-asset";
 import * as SplashScreen from "expo-splash-screen";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 
@@ -49,7 +48,9 @@ const AppNavigator = () => {
       <NavigationContainer>
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>
           <AuthStack.Screen name="Login">
-            {(props) => <LoginScreen {...props} onLoginSuccess={handleLoginSuccess} />}
+            {(props) => (
+              <LoginScreen {...props} onLoginSuccess={handleLoginSuccess} />
+            )}
           </AuthStack.Screen>
           <AuthStack.Screen name="Register" component={RegisterScreen} />
         </AuthStack.Navigator>
@@ -70,14 +71,22 @@ const AppNavigator = () => {
         screenOptions={{ headerShown: false }}
         initialRouteName="MainTabs"
       >
-        <Stack.Screen name="MainTabs" component={MainTabs} />
-        <Stack.Screen name="ProfileStack" component={ProfileStackNavigator} />
+        <Stack.Screen name="MainTabs">
+          {() => <MainTabs setIsLoggedIn={setIsLoggedIn} />}
+        </Stack.Screen>
+        <Stack.Screen name="ProfileStack">
+          {() => <ProfileStackNavigator setIsLoggedIn={setIsLoggedIn} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-const MainTabs = () => {
+type MainTabsProps = {
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const MainTabs: React.FC<MainTabsProps> = ({ setIsLoggedIn }) => {
   return (
     <Tab.Navigator
       screenOptions={{

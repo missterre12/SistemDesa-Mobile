@@ -1,14 +1,19 @@
-// navigation/ProfileStackNavigator.tsx
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ProfilScreen from '../screens/ProfilScreen';
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ProfilScreen from "../screens/ProfilScreen";
+
+type Props = {
+   setIsLoggedIn: (val: boolean) => void;
+};
 
 const Stack = createNativeStackNavigator();
 
-const ProfileStackNavigator = () => {
+const ProfileStackNavigator: React.FC<Props> = ({ setIsLoggedIn }) => {
    return (
-      <Stack.Navigator>
-         <Stack.Screen name="Profil" component={ProfilScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+         <Stack.Screen name="Profil" >
+         {(props) => <ProfilScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+         </Stack.Screen>
       </Stack.Navigator>
    );
 };
