@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 
@@ -55,9 +55,8 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             multiline
             textAlignVertical="top"
           />
-          {Platform.OS === 'ios' && <Feather name="chevron-down" size={20} color="gray" style={styles.dropdownIcon} />}
-          {Platform.OS === 'android' && <Feather name="chevron-down" size={20} color="gray" style={styles.dropdownIcon} />}
         </View>
+        <Text style={styles.fileFormat}>Minimal 10 karakter</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -76,6 +75,7 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             <Picker.Item label="Surat Izin Mendirikan Bangunan (IMB) Sederhana" value="imb_sederhana" />
           </Picker>
         </View>
+        <Text style={styles.fileFormat}>Pilih jenis surat yang sesuai dengan kebutuhan Anda</Text>
       </View>
 
       <View style={styles.navigationButtons}>
@@ -99,14 +99,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    marginLeft: 30,
   },
   subtitle: {
     fontSize: 14,
     color: 'gray',
     marginBottom: 20,
+    marginLeft: 30,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 20,
+    marginLeft: 30,
   },
   label: {
     fontSize: 16,
@@ -116,32 +119,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    width: 308,
     paddingHorizontal: 10,
     paddingVertical: 12,
-    fontSize: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   textArea: {
-    flex: 1,
     fontSize: 16,
-    paddingVertical: 8, 
-  },
-  dropdownIcon: {
-    marginLeft: 10,
+    minHeight: 80,
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 15,
-    ...(Platform.OS === 'android' && {
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-    }),
+    width: 308,
   },
   picker: {
-    height: 50, 
+    height: 50,
+  },
+  fileFormat: {
+    fontSize: 12,
+    color: 'gray',
+    marginTop: 5,
   },
   navigationButtons: {
     flexDirection: 'row',
@@ -152,11 +150,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 5,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 50,
     alignItems: 'center',
   },
   prevButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'gray',
   },
   nextButton: {
@@ -168,7 +166,7 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
