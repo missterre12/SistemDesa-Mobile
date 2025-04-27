@@ -11,7 +11,7 @@ interface ReportCardProps {
    reporter: string;
    location: string;
    onVote: () => void;
-   buttonLabel?: string; // Tambahkan buttonLabel sebagai properti opsional
+   buttonLabel?: string; 
 }
 
 const ReportCard: React.FC<ReportCardProps> = ({

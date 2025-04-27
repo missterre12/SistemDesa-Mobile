@@ -3,10 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
 import LaporanScreen from "../screens/LaporanScreen";
-import BeritaScreen from "../screens/BeritaScreen";
 import LayananStackNavigator from "./LayananStackNavigator";
 import CardStackNavigator from "./CardStackNavigator";
 import ProfileStackNavigator from "./ProfileStackNavigator";
+import BeritaStackNavigator from "./BeritaStackNavigator";
 import { Assets as NavigationAssets } from "@react-navigation/elements";
 import { Asset } from "expo-asset";
 import * as SplashScreen from "expo-splash-screen";
@@ -136,7 +136,7 @@ const MainTabs: React.FC<MainTabsProps> = ({ setIsLoggedIn }) => {
       />
       <Tab.Screen
         name="Berita"
-        component={BeritaScreen}
+        component={BeritaStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
