@@ -18,7 +18,7 @@ type TambahDataModalProps = {
 
 const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onSubmit }) => {
     const [namaPelapor, setNamaPelapor] = useState<string>('');
-    const [tanggal, setTanggal] = useState<string>('');
+    const [tanggal] = useState<string>(new Date().toISOString().split('T')[0]); // Tanggal hari ini (non-editable)
     const [keluhan, setKeluhan] = useState<string>('');
     const [deskripsi, setDeskripsi] = useState<string>('');
     const [lokasi, setLokasi] = useState<string>('');
@@ -51,7 +51,11 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
                     <TextInput style={styles.input} value={namaPelapor} onChangeText={setNamaPelapor} placeholder="Masukkan nama" />
 
                     <Text style={styles.label}>Tanggal</Text>
-                    <TextInput style={styles.input} value={tanggal} onChangeText={setTanggal} placeholder="YYYY-MM-DD" />
+                    <TextInput
+                        style={[styles.input, { backgroundColor: '#f0f0f0' }]}
+                        value={tanggal}
+                        editable={false}
+                    />
 
                     <Text style={styles.label}>Keluhan</Text>
                     <TextInput style={styles.input} value={keluhan} onChangeText={setKeluhan} placeholder="Masukkan keluhan" />
@@ -62,13 +66,12 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
                         value={deskripsi}
                         onChangeText={setDeskripsi}
                         placeholder="Deskripsi keluhan"
-                        multiline 
+                        multiline
                     />
 
                     <Text style={styles.label}>Lokasi Laporan</Text>
                     <TextInput style={styles.input} value={lokasi} onChangeText={setLokasi} placeholder="Masukkan lokasi" />
 
-                    {/* Input Bukti Laporan (File Upload) */}
                     <Text style={styles.label}>Bukti Laporan</Text>
                     <View style={styles.fileInputContainer}>
                         <TouchableOpacity style={styles.fileInputButton} onPress={pickImage}>
@@ -83,7 +86,6 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
 
                     {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
 
-                    {/* Tombol Batal & Simpan (Sejajar) */}
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
                             <Text style={styles.buttonText}>Batal</Text>
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderRadius: 5,
     },
-    inputs : {
+    inputs: {
         borderWidth: 1,
         borderColor: '#ccc',
         height: 60,

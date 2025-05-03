@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
 
 interface Form1Data {
    nik?: string;
@@ -21,18 +22,19 @@ interface Form1Props {
 }
 
 const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) => {
-   const [nik, setNik] = useState<string>('');
-   const [namaLengkap, setNamaLengkap] = useState<string>('');
-   const [tempatLahir, setTempatLahir] = useState<string>('');
-   const [tanggalLahir, setTanggalLahir] = useState<string>('');
-   const [jenisKelamin, setJenisKelamin] = useState<string>('');
-   const [agama, setAgama] = useState<string>('');
-   const [alamat, setAlamat] = useState<string>('');
-   const [nomorTelepon, setNomorTelepon] = useState<string>('');
-   const [email, setEmail] = useState<string>('');
-
-   const [isGenderModalVisible, setIsGenderModalVisible] = useState<boolean>(false);
-   const [isAgamaModalVisible, setIsAgamaModalVisible] = useState<boolean>(false);
+   const [nik, setNik] = useState('');
+   const [namaLengkap, setNamaLengkap] = useState('');
+   const [tempatLahir, setTempatLahir] = useState('');
+   const [tanggalLahir, setTanggalLahir] = useState('');
+   const [jenisKelamin, setJenisKelamin] = useState('');
+   const [agama, setAgama] = useState('');
+   const [alamat, setAlamat] = useState('');
+   const [nomorTelepon, setNomorTelepon] = useState('');
+   const [email, setEmail] = useState('');
+   const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
+   const [isAgamaModalVisible, setIsAgamaModalVisible] = useState(false);
+   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false); // State untuk DatePicker
+   const [date, setDate] = useState<Date | undefined>(initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : undefined); // State untuk tanggal
 
    const genderOptions = [
       { label: 'Laki-laki', value: 'Laki-laki' },
@@ -54,6 +56,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
          setNamaLengkap(initialData.namaLengkap || '');
          setTempatLahir(initialData.tempatLahir || '');
          setTanggalLahir(initialData.tanggalLahir || '');
+         setDate(initialData.tanggalLahir ? new Date(initialData.tanggalLahir) : undefined);
          setJenisKelamin(initialData.jenisKelamin || '');
          setAgama(initialData.agama || '');
          setAlamat(initialData.alamat || '');
@@ -81,222 +84,249 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
       setIsAgamaModalVisible(false);
    };
 
+   const showDatePicker = () => {
+      setIsDatePickerVisible(true);
+   };
+
+   const hideDatePicker = () => {
+      setIsDatePickerVisible(false);
+   };
+
+   const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+      const currentDate = selectedDate || date;
+      hideDatePicker();
+      if (currentDate) {
+         setDate(currentDate);
+         const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+         setTanggalLahir(formattedDate);
+      }
+   };
+
    return (
-      <View style={styles.container}>
+      <View>
          <Text style={styles.title}>Data Pribadi</Text>
          <Text style={styles.subtitle}>Masukkan data pribadi Anda sesuai dengan KTP</Text>
-
          {/* Field NIK */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>NIK</Text>
-            <TextInput
-               style={styles.input}
-               placeholder="Nomor Induk Kependudukan"
-               value={nik}
-               onChangeText={setNik}
-               keyboardType="numeric"
-            />
-            <Text style={styles.fileFormat}>Masukkan 16 digit NIK Anda</Text>
+         <Text style={styles.label}>NIK</Text>
+         <TextInput
+            style={styles.input}
+            placeholder="Nomor Induk Kependudukan"
+            value={nik}
+            onChangeText={setNik}
+            keyboardType="numeric"
+         />
+         <Text style={styles.fileFormat}>Masukkan 16 digit NIK Anda</Text>
          </View>
 
          {/* Nama Lengkap */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Nama Lengkap</Text>
-            <TextInput
-               style={styles.input}
-               placeholder="Nama Sesuai KTP"
-               value={namaLengkap}
-               onChangeText={setNamaLengkap}
-            />
-            <Text style={styles.fileFormat}>Gunakan nama lengkap sesuai KTP</Text>
+         <Text style={styles.label}>Nama Lengkap</Text>
+         <TextInput
+            style={styles.input}
+            placeholder="Nama Sesuai KTP"
+            value={namaLengkap}
+            onChangeText={setNamaLengkap}
+         />
+         <Text style={styles.fileFormat}>Gunakan nama lengkap sesuai KTP</Text>
          </View>
 
          {/* Tempat Lahir */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Tempat Lahir</Text>
-            <TextInput
-               style={styles.input}
-               placeholder="Tempat lahir"
-               value={tempatLahir}
-               onChangeText={setTempatLahir}
-            />
-            <Text style={styles.fileFormat}>Tuliskan nama kota tempat lahir Anda</Text>
+         <Text style={styles.label}>Tempat Lahir</Text>
+         <TextInput
+            style={styles.input}
+            placeholder="Tempat lahir"
+            value={tempatLahir}
+            onChangeText={setTempatLahir}
+         />
+         <Text style={styles.fileFormat}>Tuliskan nama kota tempat lahir Anda</Text>
          </View>
 
          {/* Tanggal Lahir */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Tanggal Lahir</Text>
-            <View style={styles.dateInputContainer}>
-               <TextInput
-                  style={styles.dateInput}
-                  placeholder="hh / bb / tttt"
-                  value={tanggalLahir}
-                  onChangeText={setTanggalLahir}
-                  keyboardType="numeric"
-               />
-               <TouchableOpacity style={styles.datePickerButton}>
-                  <Feather name="calendar" size={20} color="gray" />
-               </TouchableOpacity>
+         <Text style={styles.label}>Tanggal Lahir</Text>
+         <TouchableOpacity style={styles.dateInputContainer} onPress={showDatePicker}>
+            <TextInput
+               style={styles.dateInput}
+               placeholder="hh / bb / tttt"
+               value={tanggalLahir}
+               editable={false} // Agar tidak bisa diinput manual
+            />
+            <View style={styles.datePickerButton}>
+               <Feather name="calendar" size={20} color="gray" />
             </View>
-            <Text style={styles.fileFormat}>Format: DD/MM/YYYY</Text>
+         </TouchableOpacity>
+         <Text style={styles.fileFormat}>Format: DD/MM/YYYY</Text>
          </View>
+
+         {isDatePickerVisible && (
+         <DateTimePicker
+            testID="dateTimePicker"
+            value={date || new Date()}
+            mode={'date'}
+            is24Hour={true}
+            display="default"
+            onChange={handleDateChange}
+         />
+         )}
 
          {/* Jenis Kelamin */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Jenis Kelamin</Text>
-            <TouchableOpacity 
-               style={styles.dropdown}
-               onPress={() => setIsGenderModalVisible(true)}
-            >
-               <Text style={[styles.dropdownPlaceholder, jenisKelamin ? styles.selectedText : null]}>
-                  {jenisKelamin || 'Pilih Jenis Kelamin'}
-               </Text>
-               <Feather name="chevron-down" size={20} color="gray" />
-            </TouchableOpacity>
-            <Text style={styles.fileFormat}>Pilih jenis kelamin sesuai KTP</Text>
+         <Text style={styles.label}>Jenis Kelamin</Text>
+         <TouchableOpacity
+            style={styles.dropdown}
+            onPress={() => setIsGenderModalVisible(true)}
+         >
+            <Text style={[styles.dropdownPlaceholder, jenisKelamin ? styles.selectedText : null]}>
+               {jenisKelamin || 'Pilih Jenis Kelamin'}
+            </Text>
+            <Feather name="chevron-down" size={20} color="gray" />
+         </TouchableOpacity>
+         <Text style={styles.fileFormat}>Pilih jenis kelamin sesuai KTP</Text>
          </View>
 
          {/* Agama */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Agama</Text>
-            <TouchableOpacity 
-               style={styles.dropdown}
-               onPress={() => setIsAgamaModalVisible(true)}
-            >
-               <Text style={[styles.dropdownPlaceholder, agama ? styles.selectedText : null]}>
-                  {agama || 'Pilih Agama'}
-               </Text>
-               <Feather name="chevron-down" size={20} color="gray" />
-            </TouchableOpacity>
-            <Text style={styles.fileFormat}>Pilih agama sesuai KTP</Text>
+         <Text style={styles.label}>Agama</Text>
+         <TouchableOpacity
+            style={styles.dropdown}
+            onPress={() => setIsAgamaModalVisible(true)}
+         >
+            <Text style={[styles.dropdownPlaceholder, agama ? styles.selectedText : null]}>
+               {agama || 'Pilih Agama'}
+            </Text>
+            <Feather name="chevron-down" size={20} color="gray" />
+         </TouchableOpacity>
+         <Text style={styles.fileFormat}>Pilih agama sesuai KTP</Text>
          </View>
 
          {/* Alamat */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Alamat</Text>
-            <TextInput
-               style={styles.textArea}
-               placeholder="Alamat Sesuai KTP"
-               value={alamat}
-               onChangeText={setAlamat}
-               multiline
-               textAlignVertical="top"
-            />
-            <Text style={styles.fileFormat}>Masukkan alamat lengkap sesuai KTP</Text>
+         <Text style={styles.label}>Alamat</Text>
+         <TextInput
+            style={styles.textArea}
+            placeholder="Alamat Sesuai KTP"
+            value={alamat}
+            onChangeText={setAlamat}
+            multiline
+            textAlignVertical="top"
+         />
+         <Text style={styles.fileFormat}>Masukkan alamat lengkap sesuai KTP</Text>
          </View>
 
          {/* Nomor Telepon */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Nomor Telepon</Text>
-            <TextInput
-               style={styles.input}
-               placeholder="Nomor Telephon Aktif"
-               value={nomorTelepon}
-               onChangeText={setNomorTelepon}
-               keyboardType="phone-pad"
-            />
-            <Text style={styles.fileFormat}>Contoh: 08xxxxxxxxxx</Text>
+         <Text style={styles.label}>Nomor Telepon</Text>
+         <TextInput
+            style={styles.input}
+            placeholder="Nomor Telephon Aktif"
+            value={nomorTelepon}
+            onChangeText={setNomorTelepon}
+            keyboardType="phone-pad"
+         />
+         <Text style={styles.fileFormat}>Contoh: 08xxxxxxxxxx</Text>
          </View>
 
          {/* Email */}
          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-               style={styles.input}
-               placeholder="Email Aktif"
-               value={email}
-               onChangeText={setEmail}
-               keyboardType="email-address"
-            />
-            <Text style={styles.fileFormat}>Contoh: nama@email.com</Text>
+         <Text style={styles.label}>Email</Text>
+         <TextInput
+            style={styles.input}
+            placeholder="Email Aktif"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+         />
+         <Text style={styles.fileFormat}>Contoh: nama@email.com</Text>
          </View>
 
          {/* Tombol Selanjutnya */}
          <View style={styles.navigationButtons}>
-            <View style={styles.emptySpace}></View>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-               <Text style={styles.nextButtonText}>Selanjutnya</Text>
-            </TouchableOpacity>
+         <View style={styles.emptySpace}></View>
+         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+            <Text style={styles.nextButtonText}>Selanjutnya</Text>
+         </TouchableOpacity>
          </View>
 
          {/* Modal Jenis Kelamin */}
          <Modal
-            visible={isGenderModalVisible}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={() => setIsGenderModalVisible(false)}
+         visible={isGenderModalVisible}
+         transparent={true}
+         animationType="fade"
+         onRequestClose={() => setIsGenderModalVisible(false)}
          >
-            <TouchableOpacity 
-               style={styles.modalOverlay}
-               activeOpacity={1}
-               onPress={() => setIsGenderModalVisible(false)}
-            >
-               <View style={styles.modalContainer}>
-                  <View style={styles.modalHeader}>
-                     <Text style={styles.modalTitle}>Pilih Jenis Kelamin</Text>
-                     <TouchableOpacity onPress={() => setIsGenderModalVisible(false)}>
-                        <Feather name="x" size={24} color="#555" />
-                     </TouchableOpacity>
-                  </View>
-                  
-                  <FlatList
-                     data={genderOptions}
-                     keyExtractor={(item) => item.value}
-                     renderItem={({item}) => (
-                        <TouchableOpacity 
-                           style={styles.optionItem}
-                           onPress={() => selectGender(item.value)}
-                        >
-                           <Text style={styles.optionText}>{item.label}</Text>
-                           {jenisKelamin === item.value && (
-                              <Feather name="check" size={20} color="#003C43" />
-                           )}
-                        </TouchableOpacity>
-                     )}
-                     ItemSeparatorComponent={() => <View style={styles.separator} />}
-                  />
+         <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setIsGenderModalVisible(false)}
+         >
+            <View style={styles.modalContainer}>
+               <View style={styles.modalHeader}>
+               <Text style={styles.modalTitle}>Pilih Jenis Kelamin</Text>
+               <TouchableOpacity onPress={() => setIsGenderModalVisible(false)}>
+                  <Feather name="x" size={24} color="#555" />
+               </TouchableOpacity>
                </View>
-            </TouchableOpacity>
+
+               <FlatList
+               data={genderOptions}
+               keyExtractor={(item) => item.value}
+               renderItem={({ item }) => (
+                  <TouchableOpacity
+                     style={styles.optionItem}
+                     onPress={() => selectGender(item.value)}
+                  >
+                     <Text style={styles.optionText}>{item.label}</Text>
+                     {jenisKelamin === item.value && (
+                     <Feather name="check" size={20} color="#003C43" />
+                     )}
+                  </TouchableOpacity>
+               )}
+               ItemSeparatorComponent={() => <View style={styles.separator} />}
+               />
+            </View>
+         </TouchableOpacity>
          </Modal>
 
          {/* Modal Agama */}
          <Modal
-            visible={isAgamaModalVisible}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={() => setIsAgamaModalVisible(false)}
+         visible={isAgamaModalVisible}
+         transparent={true}
+         animationType="fade"
+         onRequestClose={() => setIsAgamaModalVisible(false)}
          >
-            <TouchableOpacity 
-               style={styles.modalOverlay}
-               activeOpacity={1}
-               onPress={() => setIsAgamaModalVisible(false)}
-            >
-               <View style={styles.modalContainer}>
-                  <View style={styles.modalHeader}>
-                     <Text style={styles.modalTitle}>Pilih Agama</Text>
-                     <TouchableOpacity onPress={() => setIsAgamaModalVisible(false)}>
-                        <Feather name="x" size={24} color="#555" />
-                     </TouchableOpacity>
-                  </View>
-                  
-                  <FlatList
-                     data={agamaOptions}
-                     keyExtractor={(item) => item.value}
-                     renderItem={({item}) => (
-                        <TouchableOpacity 
-                           style={styles.optionItem}
-                           onPress={() => selectAgama(item.value)}
-                        >
-                           <Text style={styles.optionText}>{item.label}</Text>
-                           {agama === item.value && (
-                              <Feather name="check" size={20} color="#003C43" />
-                           )}
-                        </TouchableOpacity>
-                     )}
-                     ItemSeparatorComponent={() => <View style={styles.separator} />}
-                  />
+         <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setIsAgamaModalVisible(false)}
+         >
+            <View style={styles.modalContainer}>
+               <View style={styles.modalHeader}>
+               <Text style={styles.modalTitle}>Pilih Agama</Text>
+               <TouchableOpacity onPress={() => setIsAgamaModalVisible(false)}>
+                  <Feather name="x" size={24} color="#555" />
+               </TouchableOpacity>
                </View>
-            </TouchableOpacity>
+
+               <FlatList
+               data={agamaOptions}
+               keyExtractor={(item) => item.value}
+               renderItem={({ item }) => (
+                  <TouchableOpacity
+                     style={styles.optionItem}
+                     onPress={() => selectAgama(item.value)}
+                  >
+                     <Text style={styles.optionText}>{item.label}</Text>
+                     {agama === item.value && (
+                     <Feather name="check" size={20} color="#003C43" />
+                     )}
+                  </TouchableOpacity>
+               )}
+               ItemSeparatorComponent={() => <View style={styles.separator} />}
+               />
+            </View>
+         </TouchableOpacity>
          </Modal>
       </View>
    );
@@ -341,7 +371,6 @@ const styles = StyleSheet.create({
       paddingVertical: 15, paddingHorizontal: 30, alignItems: 'center'
    },
    nextButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-
    // Modal Styles
    modalOverlay: {
       flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)',
