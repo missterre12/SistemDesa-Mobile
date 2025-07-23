@@ -4,24 +4,32 @@ import Form1 from '../components/ui/Form1';
 import Form2 from '../components/ui/Form2';
 import Form3 from '../components/ui/Form3';
 import UpperNavigation from '../components/UpperNavigation';
+import axios from 'axios';
+import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 interface Form1Data {
    nama?: string;
    email?: string;
-   // tambahkan field lain dari Form 1
+   nik?: string;
+   tempat_lahir?: string;
+   tanggal_lahir?: string;
+   jenis_kelamin?: string;
+   agama?: string;
+   alamat?: string;
+   no_hp?: string;
 }
 
 interface Form2Data {
-   tujuanPengajuan?: string;
-   jenisSurat?: string;
-   // tambahkan field dari Form 2
+   tujuan_surat?: string;
+   jenis_surat?: string;
 }
 
 interface Form3Data {
-   scanKTP?: string;
-   scanKK?: string;
+   ktp_photo?: string;
+   kk_photo?: string;
    setujuPernyataan?: boolean;
-  // tambahkan field dari Form 3
 }
 
 interface FormData {
@@ -41,6 +49,59 @@ const MultiStepFormScreen: React.FC = () => {
    const goToForm = (formNumber: number) => {
       setCurrentForm(formNumber);
    };
+
+   const submitToServer = async () => {
+   const token = await AsyncStorage.getItem('token');
+    if (!token) {
+    Alert.alert('Gagal', 'Token tidak ditemukan. Harap login ulang.');
+    return;
+    }
+
+   const data = new FormData();
+
+   // === Append text fields from form1 and form2 ===
+   Object.entries(formData.form1Data).forEach(([key, value]) => {
+      if (value !== undefined) data.append(key, value);
+   });
+
+   Object.entries(formData.form2Data).forEach(([key, value]) => {
+      if (value !== undefined) data.append(key, value);
+   });
+
+   // === Append files from form3 ===
+   const appendFile = (fieldName: string, uri?: string) => {
+      if (uri) {
+         data.append(fieldName, {
+            uri,
+            name: `${fieldName}.jpg`,
+            type: 'image/jpeg',
+         } as any); // cast to avoid TS errors
+      }
+   };
+
+   appendFile('photo_ktp', formData.form3Data.ktp_photo);
+   appendFile('photo_kk', formData.form3Data.kk_photo);
+   // add other optional files like 'foto_usaha' if needed
+
+   try {
+      const response = await axios.post(
+         `${API_URL}/api/letters`,
+         data,
+         {
+            headers: {
+               'Content-Type': 'multipart/form-data',
+               Authorization: `Bearer ${token}`,
+            },
+         }
+      );
+      Alert.alert('Sukses', 'Data berhasil dikirim!');
+      console.log('Response:', response.data);
+   } catch (err: any) {
+      console.error(err.response?.data || err.message);
+      Alert.alert('Gagal', 'Terjadi kesalahan saat mengirim data');
+   }
+};
+
 
    const updateFormData = (
       formNumber: 1 | 2 | 3,
@@ -87,7 +148,7 @@ const MultiStepFormScreen: React.FC = () => {
          )}
          {currentForm === 3 && (
          <Form3
-            onSubmit={() => console.log('Submit Data:', formData)}
+            onSubmit={submitToServer}
             onPrev={() => goToForm(2)}
             onDataChange={(data) => updateFormData(3, data as Partial<Form3Data>)}
             initialData={formData.form3Data}

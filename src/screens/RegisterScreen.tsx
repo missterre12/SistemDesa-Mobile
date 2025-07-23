@@ -15,6 +15,7 @@ import { AuthStackParamList } from '../navigation';
 import Header from '../components/log/Header';
 import { ArrowLeft } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker'; 
+import { API_URL } from '../config';
 
 // Komponen yang sudah dipecah
 import StepIndicator from '../components/register/StepIndicator';
@@ -130,37 +131,57 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const handleRegister = () => {
-    if (!validateStep3()) return;
-    
-    setLoading(true);
-    
-    // Prepare user data for API
-    const userData = {
-      nama: name,
-      username,
-      password,
-      email,
-      nik,
-      alamat,
-      jenis_kelamin: jenisKelamin,
-      no_hp: noHp,
-      agama,
-      photo
-    };
-    
-    // For demo purposes
-    setTimeout(() => {
-      console.log('Registered with:', userData);
-      setLoading(false);
-      Alert.alert(
-        'Registrasi Berhasil', 
-        'Akun Anda telah berhasil dibuat',
-        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
-      );
-    }, 1500);
+  const convertToBase64 = async (uri: string): Promise<string> => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const reader = new FileReader();
 
-    // In production, you would call your API here
+    return new Promise((resolve, reject) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+  };
+
+  const handleRegister = async () => {
+    if (!validateStep3()) return;
+
+    setLoading(true);
+
+    try {
+        const response = await fetch(`${API_URL}/api/users`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            nama: name,
+            username,
+            password,
+            NIK: nik,
+            agama,
+            alamat,
+            jenis_kel: jenisKelamin,
+            no_hp: noHp,
+            role: "user", // Or "admin" if needed
+            photo: photo ? await convertToBase64(photo) : null,
+        }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+        throw new Error(result.message || 'Registrasi gagal');
+        }
+
+        Alert.alert('Registrasi Berhasil', 'Akun berhasil dibuat!', [
+        { text: 'OK', onPress: () => navigation.navigate('Login') },
+        ]);
+    } catch (error: any) {
+        Alert.alert('Error', error.message || 'Terjadi kesalahan');
+    } finally {
+        setLoading(false);
+    }
   };
 
   return (

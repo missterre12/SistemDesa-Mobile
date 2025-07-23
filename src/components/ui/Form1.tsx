@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
+import DateTimePicker from '@react-native-community/datetimepicker'; 
 
 interface Form1Data {
    nik?: string;
-   namaLengkap?: string;
-   tempatLahir?: string;
-   tanggalLahir?: string;
-   jenisKelamin?: string;
+   nama?: string;
+   tempat_lahir?: string;
+   tanggal_lahir?: string;
+   jenis_kelamin?: string;
    agama?: string;
    alamat?: string;
-   nomorTelepon?: string;
+   no_hp?: string;
    email?: string;
 }
 
@@ -23,7 +23,7 @@ interface Form1Props {
 
 const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) => {
    const [nik, setNik] = useState('');
-   const [namaLengkap, setNamaLengkap] = useState('');
+   const [nama, setNama] = useState('');
    const [tempatLahir, setTempatLahir] = useState('');
    const [tanggalLahir, setTanggalLahir] = useState('');
    const [jenisKelamin, setJenisKelamin] = useState('');
@@ -34,7 +34,9 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
    const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
    const [isAgamaModalVisible, setIsAgamaModalVisible] = useState(false);
    const [isDatePickerVisible, setIsDatePickerVisible] = useState(false); // State untuk DatePicker
-   const [date, setDate] = useState<Date | undefined>(initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : undefined); // State untuk tanggal
+   const [date, setDate] = useState<Date | undefined>(initialData?.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
+   const [isEditable, setIsEditable] = useState(false);
+   const tanggalLahirRef = useRef<TextInput>(null);
 
    const genderOptions = [
       { label: 'Laki-laki', value: 'Laki-laki' },
@@ -53,25 +55,43 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
    useEffect(() => {
       if (initialData) {
          setNik(initialData.nik || '');
-         setNamaLengkap(initialData.namaLengkap || '');
-         setTempatLahir(initialData.tempatLahir || '');
-         setTanggalLahir(initialData.tanggalLahir || '');
-         setDate(initialData.tanggalLahir ? new Date(initialData.tanggalLahir) : undefined);
-         setJenisKelamin(initialData.jenisKelamin || '');
+         setNama(initialData.nama || '');
+         setTempatLahir(initialData.tempat_lahir || '');
+         setTanggalLahir(initialData.tanggal_lahir || '');
+         setDate(initialData.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
+         setJenisKelamin(initialData.jenis_kelamin || '');
          setAgama(initialData.agama || '');
          setAlamat(initialData.alamat || '');
-         setNomorTelepon(initialData.nomorTelepon || '');
+         setNomorTelepon(initialData.no_hp || '');
          setEmail(initialData.email || '');
       }
    }, [initialData]);
 
+   useEffect(() => {
+        if (isEditable && tanggalLahirRef.current) {
+            tanggalLahirRef.current.focus();
+        }
+    }, [isEditable]);
+
    const handleNext = () => {
-      if (nik && namaLengkap && tempatLahir && tanggalLahir && jenisKelamin && agama && alamat && nomorTelepon && email) {
-         onDataChange({ nik, namaLengkap, tempatLahir, tanggalLahir, jenisKelamin, agama, alamat, nomorTelepon, email });
-         onSubmit();
-      } else {
-         alert('Harap isi semua field di Form 1');
-      }
+      if (nik && nama && tempatLahir && tanggalLahir && jenisKelamin && agama && alamat && nomorTelepon && email) {
+         const payload = {
+            nik,
+            nama: nama,
+            tempat_lahir: tempatLahir,
+            tanggal_lahir: tanggalLahir,
+            jenis_kelamin: jenisKelamin,
+            agama,
+            alamat,
+            no_hp: nomorTelepon,
+            email,
+            };
+
+            onDataChange(payload);
+            onSubmit();
+        } else {
+            alert('Harap isi semua field di Form 1');
+        }
    };
 
    const selectGender = (gender: string) => {
@@ -109,6 +129,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
          {/* Field NIK */}
          <View style={styles.fieldContainer}>
          <Text style={styles.label}>NIK</Text>
+         
          <TextInput
             style={styles.input}
             placeholder="Nomor Induk Kependudukan"
@@ -125,8 +146,8 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
          <TextInput
             style={styles.input}
             placeholder="Nama Sesuai KTP"
-            value={namaLengkap}
-            onChangeText={setNamaLengkap}
+            value={nama}
+            onChangeText={setNama}
          />
          <Text style={styles.fileFormat}>Gunakan nama lengkap sesuai KTP</Text>
          </View>

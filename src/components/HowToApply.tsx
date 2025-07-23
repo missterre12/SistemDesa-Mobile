@@ -36,10 +36,12 @@ type LayananStackParamList = {
 };
 
 const HowToApply: React.FC = () => {
-   const navigation = useNavigation<StackNavigationProp<LayananStackParamList>>(); // Gunakan type yang sesuai
+   const navigation = useNavigation<any>();
 
    const handleAjukanSurat = () => {
-      navigation.navigate("AjukanSurat");
+      navigation.navigate("Layanan Surat", {
+        screen: "AjukanSurat"
+      });
    };
 
    return (

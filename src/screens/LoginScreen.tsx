@@ -12,6 +12,9 @@ import { AuthStackParamList } from '../navigation';
 import Header from '../components/log/Header';
 import InputField from '../components/log/InputField';
 import AuthButton from '../components/log/LogButton';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -27,14 +30,20 @@ const LoginScreen: React.FC<Props> = ({ navigation, onLoginSuccess }) => {
 
   const handleLogin = async () => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+        const res = await axios.post(`${API_URL}/api/login`, {
+        username: email,
+        password,
+        });
 
-    if (email === '12' && password === '12') {
-      setLoading(false);
-      onLoginSuccess();
-    } else {
-      setLoading(false);
-      alert('Email atau password salah');
+        const token = res.data.token;
+        await AsyncStorage.setItem('token', token);
+
+        setLoading(false);
+        onLoginSuccess(); 
+    } catch (error) {
+        setLoading(false);
+        alert("Email atau password salah");
     }
   };
 

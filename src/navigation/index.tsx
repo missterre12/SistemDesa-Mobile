@@ -15,11 +15,11 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 
 Asset.loadAsync([
-  ...NavigationAssets,
-  require("../assets/navigations/home.png"),
-  require("../assets/navigations/surat.png"),
-  require("../assets/navigations/report.png"),
-  require("../assets/navigations/news.png"),
+    ...NavigationAssets,
+    require("../assets/navigations/home.png"),
+    require("../assets/navigations/surat.png"),
+    require("../assets/navigations/report.png"),
+    require("../assets/navigations/news.png"),
 ]);
 
 const Tab = createBottomTabNavigator();
@@ -27,127 +27,140 @@ const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 export type RootStackParamList = {
-  MainTabs: undefined;
-  ProfileStack: undefined;
+    MainTabs: undefined;
+    ProfileStack: undefined;
 };
 
 export type AuthStackParamList = {
-  Login: { onLoginSuccess: () => void } | undefined;
-  Register: undefined;
+    Login: { onLoginSuccess: () => void } | undefined;
+    Register: undefined;
 };
 
 const AppNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+    };
 
-  if (!isLoggedIn) {
+    if (!isLoggedIn) {
+        return (
+            <NavigationContainer key={isLoggedIn ? "user" : "guest"}>
+                {isLoggedIn ? (
+                    <Stack.Navigator screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="MainTabs">
+                            {() => <MainTabs setIsLoggedIn={setIsLoggedIn} />}
+                        </Stack.Screen>
+                        <Stack.Screen name="ProfileStack">
+                            {() => <ProfileStackNavigator setIsLoggedIn={setIsLoggedIn} />}
+                        </Stack.Screen>
+                    </Stack.Navigator>
+                ) : (
+                    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+                        <AuthStack.Screen name="Login">
+                            {(props) => (
+                                <LoginScreen {...props} onLoginSuccess={() => setIsLoggedIn(true)} />
+                            )}
+                        </AuthStack.Screen>
+                        <AuthStack.Screen name="Register" component={RegisterScreen} />
+                    </AuthStack.Navigator>
+                )}
+            </NavigationContainer>
+        );
+
+    }
+
     return (
-      <NavigationContainer>
-        <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-          <AuthStack.Screen name="Login">
-            {(props) => (
-              <LoginScreen {...props} onLoginSuccess={handleLoginSuccess} />
-            )}
-          </AuthStack.Screen>
-          <AuthStack.Screen name="Register" component={RegisterScreen} />
-        </AuthStack.Navigator>
-      </NavigationContainer>
+        <NavigationContainer
+            linking={{
+                prefixes: ["helloworld://"],
+            }}
+            onReady={() => {
+                SplashScreen.hideAsync();
+            }}
+        >
+            <Stack.Navigator
+                screenOptions={{ headerShown: false }}
+                initialRouteName="MainTabs"
+            >
+                <Stack.Screen name="MainTabs">
+                    {() => <MainTabs setIsLoggedIn={setIsLoggedIn} />}
+                </Stack.Screen>
+                <Stack.Screen name="ProfileStack">
+                    {() => <ProfileStackNavigator setIsLoggedIn={setIsLoggedIn} />}
+                </Stack.Screen>
+            </Stack.Navigator>
+        </NavigationContainer>
     );
-  }
-
-  return (
-    <NavigationContainer
-      linking={{
-        prefixes: ["helloworld://"],
-      }}
-      onReady={() => {
-        SplashScreen.hideAsync();
-      }}
-    >
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="MainTabs"
-      >
-        <Stack.Screen name="MainTabs">
-          {() => <MainTabs setIsLoggedIn={setIsLoggedIn} />}
-        </Stack.Screen>
-        <Stack.Screen name="ProfileStack">
-          {() => <ProfileStackNavigator setIsLoggedIn={setIsLoggedIn} />}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
 };
 
 type MainTabsProps = {
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const MainTabs: React.FC<MainTabsProps> = ({ setIsLoggedIn }) => {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: "#f8f8f8",
-          paddingBottom: 5,
-        },
-        tabBarActiveTintColor: "#0F766E",
-      }}
-    >
-      <Tab.Screen
-        name="Beranda"
-        component={CardStackNavigator}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../assets/navigations/home.png")}
-              style={{ width: size, height: size, tintColor: color }}
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                headerShown: false,
+                tabBarStyle: {
+                    backgroundColor: "#f8f8f8",
+                    paddingBottom: 5,
+                },
+                tabBarActiveTintColor: "#0F766E",
+            }}
+        >
+            <Tab.Screen
+                name="Beranda"
+                component={CardStackNavigator}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Image
+                            source={require("../assets/navigations/home.png")}
+                            style={{ width: size, height: size, tintColor: color }}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Layanan Surat"
-        component={LayananStackNavigator}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../assets/navigations/surat.png")}
-              style={{ width: size, height: size, tintColor: color }}
+            <Tab.Screen
+                name="Layanan Surat"
+                component={LayananStackNavigator}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Image
+                            source={require("../assets/navigations/surat.png")}
+                            style={{ width: size, height: size, tintColor: color }}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Laporan"
-        component={LaporanScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../assets/navigations/report.png")}
-              style={{ width: size, height: size, tintColor: color }}
+            <Tab.Screen
+                name="Laporan"
+                component={LaporanScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Image
+                            source={require("../assets/navigations/report.png")}
+                            style={{ width: size, height: size, tintColor: color }}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Berita"
-        component={BeritaStackNavigator}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              source={require("../assets/navigations/news.png")}
-              style={{ width: size, height: size, tintColor: color }}
+            <Tab.Screen
+                name="Berita"
+                component={BeritaStackNavigator}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Image
+                            source={require("../assets/navigations/news.png")}
+                            style={{ width: size, height: size, tintColor: color }}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
+        </Tab.Navigator>
+
+    );
 };
 
 export default AppNavigator;

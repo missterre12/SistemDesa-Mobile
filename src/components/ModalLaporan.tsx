@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
+import { API_URL } from "../config";
 
 type TambahDataModalProps = {
     visible: boolean;
@@ -38,9 +40,21 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
     };
 
     const handleSubmit = () => {
-        const data = { namaPelapor, tanggal, keluhan, deskripsi, lokasi, image };
-        onSubmit(data);
-        onClose();
+        if (!namaPelapor || !tanggal || !keluhan || !deskripsi || !lokasi) {
+            Alert.alert("Peringatan", "Harap isi semua data terlebih dahulu.");
+            return;
+        }
+
+        onSubmit({
+            namaPelapor,
+            tanggal,
+            keluhan,
+            deskripsi,
+            lokasi,
+            image,
+        });
+
+        onClose(); 
     };
 
     return (
