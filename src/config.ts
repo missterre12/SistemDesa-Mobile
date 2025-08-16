@@ -1,1 +1,1 @@
-export const API_URL = "http://192.168.18.20:19000";
+export const API_URL = "https://si-desa2.onrender.com";
