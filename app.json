@@ -4,7 +4,11 @@
     "slug": "sistem-desa-mob",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "android": {
       "package": "com.example.sistemdesamob"
     },
@@ -14,9 +18,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d5d6c97a-8587-4801-aaca-f3c5f23e1105"
+      }
+    },
+    "plugins": [
+      "expo-asset",
+      "react-native-edge-to-edge"
+    ]
   }
 }
