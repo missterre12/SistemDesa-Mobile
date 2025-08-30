@@ -1,26 +1,38 @@
 {
-  "cli": {
-    "version": ">= 16.17.4",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "cli": {
+        "version": ">= 16.17.4",
+        "appVersionSource": "remote"
     },
-    "release": {
-      "android": {
-        "buildType": "apk"
-      }
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "env": {
+                "API_URL": "https://si-desa2.onrender.com"
+            }
+        },
+        "release": {
+            "android": {
+                "buildType": "apk"
+            },
+            "env": {
+                "API_URL": "https://si-desa2.onrender.com"
+            }
+        },
+        "preview": {
+            "distribution": "internal",
+            "env": {
+                "API_URL": "https://si-desa2.onrender.com"
+            }
+        },
+        "production": {
+            "autoIncrement": true,
+            "env": {
+                "API_URL": "https://si-desa2.onrender.com"
+            }
+        }
     },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
+    "submit": {
+        "production": {}
     }
-  },
-  "submit": {
-    "production": {}
-  }
 }

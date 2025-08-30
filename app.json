@@ -10,10 +10,14 @@
       "web"
     ],
     "android": {
-      "package": "com.example.sistemdesamob"
+      "package": "com.example.sistemdesamob",
+      "permissions": ["INTERNET"]
     },
     "ios": {
-      "bundleIdentifier": "com.example.sistemdesamob"
+      "bundleIdentifier": "com.example.sistemdesamob",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "updates": {
       "fallbackToCacheTimeout": 0
