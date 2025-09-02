@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
-    zIndex: 999,
+    zIndex: 9999,
   },
   emptyText: {
     textAlign: "center",

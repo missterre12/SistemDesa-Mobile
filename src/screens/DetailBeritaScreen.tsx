@@ -8,12 +8,15 @@ type DetailRouteProp = RouteProp<BeritaStackParamList, "DetailBerita">;
 const DetailBeritaScreen = () => {
    const route = useRoute<DetailRouteProp>();
    const { title, description, imageUrl, date, reporter, location } = route.params;
-
+   console.log('Image URL:', imageUrl);
    return (
       <SafeAreaView style={styles.container}>
          <ScrollView>
 
-         <Image source={{ uri: imageUrl }} style={styles.image} />
+         <Image
+            source={{ uri: imageUrl ? imageUrl : 'https://placehold.co/600x400' }}
+            style={styles.image}
+         />
          <View style={styles.content}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.date}>{date}</Text>

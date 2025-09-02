@@ -16,11 +16,13 @@ import axios from "axios";
 import { API_URL } from "../config";
 import { useFocusEffect } from "@react-navigation/native";
 import TambahDataModal from "../components/ModalLaporan";
+import { useSocket } from "../context/SocketContext";
 
 const LaporanScreen = () => {
     const [laporans, setLaporans] = useState<any[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [filteredLaporans, setFilteredLaporans] = useState<any[]>([]);
+    const socket = useSocket();
 
     // Fetch laporans every time screen is focused
     useFocusEffect(
@@ -105,6 +107,13 @@ const LaporanScreen = () => {
                     "Content-Type": "application/json",
                 },
             });
+            if (socket) {
+                socket.emit("notification", {
+                    title: "Laporan Baru",
+                    body: `${data.namaPelapor} melaporkan: ${data.keluhan}`,
+                    time: new Date(),
+                });
+            }
 
             setModalVisible(false);
 
@@ -149,7 +158,7 @@ const LaporanScreen = () => {
                     {filteredLaporans.map((laporan) => ( 
                         <ReportCard
                             key={laporan.laporan_id}
-                            imageUrl={laporan.photo}
+                            imageUrl={laporan.photo ? `data:image/jpeg;base64,${laporan.photo}` : "https://via.placeholder.com/600x400"}
                             date={laporan.tanggal}
                             title={laporan.keluhan}
                             description={laporan.deskripsi}

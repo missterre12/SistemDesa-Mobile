@@ -3,7 +3,6 @@ import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image } fro
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
-import { API_URL } from "../config";
 
 type TambahDataModalProps = {
     visible: boolean;
@@ -28,7 +27,7 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaType.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,

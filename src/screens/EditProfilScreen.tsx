@@ -35,7 +35,7 @@ export default function EditProfileScreen() {
                 setUserData(user);
 
                 // If the photo is just a filename or blob, construct the URL
-                if (user.photo && !user.photo.startsWith("data:")) {
+                if (user.photo) {
                     setPhoto(`${API_URL}/uploads/${user.photo}`);
                 } else {
                     setPhoto(user.photo); // already base64
@@ -50,7 +50,7 @@ export default function EditProfileScreen() {
 
     const handlePickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaType.Images,
             quality: 1,
             allowsEditing: true,
             base64: true,

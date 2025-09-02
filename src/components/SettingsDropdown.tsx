@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 5,
-    zIndex: 999,
+    zIndex: 9999,
   },
   item: {
     paddingVertical: 8,
@@ -41,5 +41,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: "#0F766E",
+    zIndex: 9999
   },
 });

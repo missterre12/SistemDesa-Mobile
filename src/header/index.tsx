@@ -19,7 +19,7 @@ const Header: React.FC = () => {
   // Toggle profile dropdown
   const handleSettingsToggle = () => {
     setShowSettingsDropdown((prev) => !prev);
-    setShowNotificationDropdown(false); // hide the other
+    setShowNotificationDropdown(false);
   };
 
   // Toggle notification dropdown
@@ -85,6 +85,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  settingsContainer: {
+    position: "relative",
+    zIndex: 9999
   },
   headerRight: {
     flexDirection: "row",

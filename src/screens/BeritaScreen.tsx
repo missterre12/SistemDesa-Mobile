@@ -71,9 +71,7 @@ const BeritaScreen = () => {
                         filteredBeritas.map((berita: any) => (
                             <ReportCard
                                 key={berita.berita_id}
-                                imageUrl={
-                                    berita.photo
-                                }
+                                imageUrl={berita.photo ? `data:image/jpeg;base64,${berita.photo}` : "https://via.placeholder.com/600x400"}
                                 date={new Date(berita.tanggal).toLocaleDateString("id-ID", {
                                     day: "numeric",
                                     month: "long",
@@ -95,7 +93,7 @@ const BeritaScreen = () => {
                                         description: berita.kontent,
                                         imageUrl: berita.photo
                                             ? `data:image/jpeg;base64,${berita.photo}`
-                                            : "https://via.placeholder.com/300",
+                                            : "https://via.placeholder.com/600x400",
                                         date: new Date(berita.tanggal).toLocaleDateString("id-ID", {
                                             day: "numeric",
                                             month: "long",

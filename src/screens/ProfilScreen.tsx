@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_URL } from "../config";
-import { CommonActions } from "@react-navigation/native";
+import { Image } from "react-native";
 
 type Props = {
     setIsLoggedIn: (val: boolean) => void;
@@ -22,6 +22,7 @@ type User = {
     username: string;
     nama: string;
     email?: string;
+    photo?: string;
 };
 
 const ProfilScreen: React.FC<Props> = ({ setIsLoggedIn }) => {
@@ -76,7 +77,20 @@ const ProfilScreen: React.FC<Props> = ({ setIsLoggedIn }) => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
-                <UserCircle size={100} color="#0F766E" style={styles.profileIcon} />
+                {user?.photo ? (
+                // Displays the photo if it exists
+                <Image 
+                    source={{ uri: `data:image/jpeg;base64,${user.photo}` }} 
+                    style={styles.profileImage} 
+                />
+            ) : (
+                // Displays the UserCircle icon if no photo exists
+                <UserCircle 
+                    size={100} 
+                    color="#0F766E" 
+                    style={styles.profileIcon} 
+                />
+            )}
                 <Text style={styles.name}>{user?.nama || "Memuat..."}</Text>
                 <Text style={styles.email}>{user?.email || "-"}</Text>
 
@@ -102,6 +116,12 @@ const styles = StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: "#F5F5F5" },
     container: { flex: 1, justifyContent: "center", alignItems: "center" },
     profileIcon: { marginBottom: 15 },
+    profileImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 50, 
+        marginBottom: 15,
+    },
     name: { fontSize: 20, fontWeight: "bold", color: "#333" },
     email: { fontSize: 16, color: "#777", marginBottom: 20 },
     button: {

@@ -47,7 +47,7 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
 
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                mediaTypes: ImagePicker.MediaType.Images,
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 0.8,
