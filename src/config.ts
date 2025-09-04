@@ -1,0 +1,1 @@
+export const API_URL = "https://si-desa2.onrender.com";
