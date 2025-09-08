@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Alert
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../navigation';
@@ -43,7 +44,7 @@ const LoginScreen: React.FC<Props> = ({ navigation, onLoginSuccess }) => {
         onLoginSuccess(); 
     } catch (error) {
         setLoading(false);
-        alert("Email atau password salah");
+        Alert.alert("Email atau password salah");
     }
   };
 

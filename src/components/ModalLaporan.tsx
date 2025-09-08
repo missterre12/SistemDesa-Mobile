@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
-import Fontisto from '@react-native-vector-icons/Fontisto';
+import { Fontisto } from '@react-native-vector-icons/fontisto';
 
 type TambahDataModalProps = {
     visible: boolean;

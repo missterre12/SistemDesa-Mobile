@@ -1,9 +1,37 @@
 import React from "react";
 import { View } from "react-native";
 import ReportCard from "../components/ReportCard";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-// BeritaList will receive the news data and a navigation function as props
-const BeritaList = ({ beritas, navigation }) => {
+type RootStackParamList = {
+    DetailBerita: {
+        title: string;
+        description: string;
+        imageUrl: string;
+        date: string;
+        reporter: string;
+        location: string;
+    };
+};
+
+type BeritaListNavigationProp = NativeStackNavigationProp<RootStackParamList, "DetailBerita">;
+
+interface Berita {
+    berita_id: string;
+    photo?: string;
+    tanggal: string;
+    judul: string;
+    kontent: string;
+    status: string;
+    kategori: string;
+}
+
+interface BeritaListProps {
+    beritas: Berita[];
+    navigation: BeritaListNavigationProp;
+}
+
+const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
     return (
         <View>
             {beritas.map((berita: any) => (

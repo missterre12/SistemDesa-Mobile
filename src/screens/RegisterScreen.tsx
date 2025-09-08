@@ -12,7 +12,6 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../navigation';
 import Header from '../components/log/Header';
-import { ArrowLeft } from 'lucide-react-native';
 import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
 import StepIndicator from '../components/register/StepIndicator';
 import Step1Form from '../components/register/Step1Form';

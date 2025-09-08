@@ -1,8 +1,3 @@
 <resources>
-<<<<<<< HEAD
-    <string name="app_name">SistemDesaMobile</string>
+    <string name="app_name">sistem-desa-mob</string>
 </resources>
-=======
-  <string name="app_name">sistem-desa-mob</string>
-</resources>
->>>>>>> 0af8a04ada5700508a6773d29f20af4023c9a7e8
