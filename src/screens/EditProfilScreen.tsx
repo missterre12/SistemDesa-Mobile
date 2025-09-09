@@ -8,10 +8,8 @@ import {
     Image,
     ScrollView,
     Alert,
-    Platform,
-    PermissionsAndroid,
 } from "react-native";
-import { launchImageLibrary, ImagePickerResponse, PhotoQuality } from 'react-native-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -35,11 +33,10 @@ export default function EditProfileScreen() {
 
                 const user = res.data.data;
                 setUserData(user);
-
                 if (user.photo) {
                     setPhoto(`${API_URL}/uploads/${user.photo}`);
                 } else {
-                    setPhoto(user.photo);
+                    setPhoto(user.photo); // already base64
                 }
             } catch (error) {
                 console.error("Error loading user data:", error);
@@ -49,60 +46,33 @@ export default function EditProfileScreen() {
         fetchUser();
     }, []);
 
-    const requestPermission = async () => {
-        if (Platform.OS === 'android') {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-                {
-                    title: 'Akses Galeri Diperlukan',
-                    message: 'Aplikasi ini membutuhkan akses ke galeri foto Anda untuk mengunggah gambar.',
-                    buttonNeutral: 'Tanya Nanti',
-                    buttonNegative: 'Batal',
-                    buttonPositive: 'OK',
-                },
-            );
-            return granted === PermissionsAndroid.RESULTS.GRANTED;
-        }
-        return true;
-    };
-
     const handlePickImage = async () => {
-        const hasPermission = await requestPermission();
-        if (!hasPermission) {
-            Alert.alert('Izin Diperlukan', 'Izin akses galeri tidak diberikan.');
-            return;
-        }
-
-        const options = {
-            mediaType: 'photo' as 'photo',
-            quality: 1 as PhotoQuality,
-            includeBase64: true,
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
             allowsEditing: true,
-        };
-
-        launchImageLibrary(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.errorCode) {
-                console.log('ImagePicker Error: ', response.errorMessage);
-            } else if (response.assets && response.assets.length > 0) {
-                const asset = response.assets[0];
-                if (asset.uri && asset.base64) {
-                    const base64 = asset.base64;
-                    const uri = asset.uri;
-                    const extension = uri.split(".").pop()?.toLowerCase();
-
-                    const mimeType =
-                        extension === "png"
-                            ? "image/png"
-                            : extension === "jpg" || extension === "jpeg"
-                            ? "image/jpeg"
-                            : "image/jpeg";
-
-                    setPhoto(`data:${mimeType};base64,${base64}`);
-                }
-            }
+            base64: true,
         });
+
+        if (!result.canceled && result.assets.length > 0) {
+            const asset = result.assets[0];
+            const base64 = asset.base64;
+            const uri = asset.uri;
+            const extension = uri.split(".").pop()?.toLowerCase();
+
+            const mimeType =
+                extension === "png"
+                    ? "image/png"
+                    : extension === "jpg" || extension === "jpeg"
+                        ? "image/jpeg"
+                        : "image/jpeg"; // fallback
+
+            if (base64) {
+                setPhoto(`data:${mimeType};base64,${base64}`);
+            } else {
+                setPhoto(uri); // fallback
+            }
+        }
     };
 
     const handleSave = async () => {
@@ -116,15 +86,15 @@ export default function EditProfileScreen() {
             formData.append("alamat", userData.alamat);
 
             if (password && password.length >= 6) {
-                formData.append("password", password);
+                formData.append("password", password); 
             }
 
             if (photo && !photo.startsWith(API_URL)) {
                 if (photo.startsWith("data:image")) {
-                    const base64Data = photo.split("base64,")[1];
-                    const photoBlob = await (await fetch(photo)).blob();
-                    formData.append("photo", photoBlob);
+                    // It's base64
+                    formData.append("photo", photo);
                 } else {
+                    // It's file URI
                     const filename = photo.split("/").pop();
                     const match = /\.(\w+)$/.exec(filename || "");
                     const type = match ? `image/${match[1]}` : `image`;

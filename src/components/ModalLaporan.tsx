@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
-import { Fontisto } from '@react-native-vector-icons/fontisto';
+import * as ImagePicker from 'expo-image-picker';
+import { Fontisto } from '@expo/vector-icons';
 
 type TambahDataModalProps = {
     visible: boolean;
@@ -24,21 +24,22 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
     const [lokasi, setLokasi] = useState<string>('');
     const [image, setImage] = useState<string | null>(null);
 
-    const pickImage = () => {
-        const options = {
-            mediaType: 'photo' as 'photo',
-            quality: 1 as 1, // Explicitly casting to one of the allowed PhotoQuality numbers
-        };
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert('Permission Denied', 'Permission to access media library is required!');
+            return;
+        }
 
-        launchImageLibrary(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.errorCode) {
-                console.log('ImagePicker Error: ', response.errorMessage);
-            } else if (response.assets && response.assets.length > 0 && response.assets[0].uri) {
-                setImage(response.assets[0].uri);
-            }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+            allowsEditing: true,
         });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
     };
 
     const handleSubmit = () => {

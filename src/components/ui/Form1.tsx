@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
-import { Feather } from '@react-native-vector-icons/feather';
+import { Feather } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 
 interface Form1Data {

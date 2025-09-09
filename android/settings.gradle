@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SistemDesaMobile"
+rootProject.name = 'sistem-desa-mob'
 include ':app'

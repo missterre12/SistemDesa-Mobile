@@ -1,4 +1,42 @@
 {
-  "name": "SistemDesaMobile",
-  "displayName": "SistemDesaMobile"
+  "expo": {
+    "name": "sistem-desa-mob",
+    "slug": "sistem-desa-mob",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.example.sistemdesamobile",
+      "permissions": ["INTERNET"],
+      "jsEngine": "jsc"
+    },
+    "ios": {
+      "bundleIdentifier": "com.example.sistemdesamobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d5d6c97a-8587-4801-aaca-f3c5f23e1105"
+      }
+    },
+    "plugins": [
+      "expo-asset",
+      "react-native-edge-to-edge"
+    ]
+  }
 }

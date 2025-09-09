@@ -1,3 +1,4 @@
+// screens/RegisterScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -12,12 +13,14 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../navigation';
 import Header from '../components/log/Header';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker'; 
+import { API_URL } from '../config';
+
+// Komponen yang sudah dipecah
 import StepIndicator from '../components/register/StepIndicator';
 import Step1Form from '../components/register/Step1Form';
 import Step2Form from '../components/register/Step2Form';
 import Step3Form from '../components/register/Step3Form';
-import { API_URL } from '../config';
 
 type RegisterScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Register'>;
 
@@ -106,20 +109,25 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const pickImage = () => {
-    const options = {
-      mediaType: 'photo' as 'photo',
-      quality: 1 as 1,
-    };
-    launchImageLibrary(options, (response: ImagePickerResponse) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0 && response.assets[0].uri) {
-        setPhoto(response.assets[0].uri);
-      }
+  const pickImage = async () => {
+    // Ask for permission
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Izin Diperlukan', 'Izin akses galeri diperlukan untuk memilih foto.');
+      return;
+    }
+
+    // Launch image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
     });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setPhoto(result.assets[0].uri);
+    }
   };
 
   const convertToBase64 = async (uri: string): Promise<string> => {
@@ -128,9 +136,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     const reader = new FileReader();
 
     return new Promise((resolve, reject) => {
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
     });
   };
 
@@ -140,45 +148,45 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/users`, {
+        const response = await fetch(`${API_URL}/api/users`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          nama: name,
-          username,
-          password,
-          NIK: nik,
-          agama,
-          alamat,
-          jenis_kel: jenisKelamin,
-          no_hp: noHp,
-          role: "user", // Or "admin" if needed
-          photo: photo ? await convertToBase64(photo) : null,
+            nama: name,
+            username,
+            password,
+            NIK: nik,
+            agama,
+            alamat,
+            jenis_kel: jenisKelamin,
+            no_hp: noHp,
+            role: "user", // Or "admin" if needed
+            photo: photo ? await convertToBase64(photo) : null,
         }),
-      });
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (!response.ok) {
+        if (!response.ok) {
         throw new Error(result.message || 'Registrasi gagal');
-      }
+        }
 
-      Alert.alert('Registrasi Berhasil', 'Akun berhasil dibuat!', [
+        Alert.alert('Registrasi Berhasil', 'Akun berhasil dibuat!', [
         { text: 'OK', onPress: () => navigation.navigate('Login') },
-      ]);
+        ]);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Terjadi kesalahan');
+        Alert.alert('Error', error.message || 'Terjadi kesalahan');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Header title="REGISTER" />
+        <Header title="REGISTER"/>
         <View style={{ paddingTop: 20 }}>
           <StepIndicator currentStep={currentStep} totalSteps={3} />
         </View>

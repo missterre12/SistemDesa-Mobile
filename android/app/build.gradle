@@ -5,17 +5,17 @@ plugins {
 }
 
 android {
-    namespace "com.example.sistemdesamobile"
+    namespace 'com.example.sistemdesamobile'
     ndkVersion = "26.1.10909125"
     compileSdkVersion = 34
     buildToolsVersion = "35.0.0"
 
     defaultConfig {
-        applicationId "com.example.sistemdesamobile"
+        applicationId 'com.example.sistemdesamobile'
         minSdk = 24
         targetSdk = 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         
         // This is the key change. We are now explicitly enabling the New Architecture.
         // This will ensure the required native libraries, like "libreact_featureflagsjni.so",

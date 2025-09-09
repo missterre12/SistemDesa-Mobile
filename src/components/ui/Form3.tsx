@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
-import { Feather } from '@react-native-vector-icons/feather';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
+import { Feather } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 interface Form3Data {
     ktp_photo?: string; // base64 string
-    kk_photo?: string; // base64 string
+    kk_photo?: string;  // base64 string
     setujuPernyataan?: boolean;
 }
 
@@ -19,7 +19,7 @@ interface Form3Props {
 
 const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialData }) => {
     const [ktpImage, setKtpImage] = useState<string | null>(null); // uri
-    const [kkImage, setKkImage] = useState<string | null>(null); // uri
+    const [kkImage, setKkImage] = useState<string | null>(null);   // uri
     const [ktpBase64, setKtpBase64] = useState<string | null>(null);
     const [kkBase64, setKkBase64] = useState<string | null>(null);
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
@@ -32,33 +32,49 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
         }
     }, [initialData]);
 
-    const pickImage = (type: 'ktp' | 'kk') => {
-        const options = {
-            mediaType: 'photo' as 'photo',
-            includeBase64: true,
-        };
+    const requestPermission = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Izin Diperlukan', 'Kami membutuhkan akses ke galeri Anda untuk memilih gambar.');
+            return false;
+        }
+        return true;
+    };
 
-        launchImageLibrary(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.errorCode) {
-                console.log('ImagePicker Error: ', response.errorMessage);
-            } else if (response.assets && response.assets.length > 0) {
-                const asset = response.assets[0];
-                if (asset.uri && asset.base64) {
-                    const uri = asset.uri;
-                    const base64String = asset.base64;
+    const pickImage = async (type: 'ktp' | 'kk') => {
+        const hasPermission = await requestPermission();
+        if (!hasPermission) return;
 
-                    if (type === 'ktp') {
-                        setKtpImage(uri);
-                        setKtpBase64(base64String);
-                    } else {
-                        setKkImage(uri);
-                        setKkBase64(base64String);
-                    }
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets.length > 0) {
+                const asset = result.assets[0];
+                const uri = asset.uri;
+
+                const base64 = await FileSystem.readAsStringAsync(uri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+
+                const base64String = `data:image/jpeg;base64,${base64}`;
+
+                if (type === 'ktp') {
+                    setKtpImage(uri);
+                    setKtpBase64(base64String);
+                } else {
+                    setKkImage(uri);
+                    setKkBase64(base64String);
                 }
             }
-        });
+        } catch (error) {
+            console.error('Error picking image:', error);
+            Alert.alert('Kesalahan', 'Terjadi kesalahan saat memilih gambar.');
+        }
     };
 
     const handleSubmit = () => {
