@@ -29,13 +29,8 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "d5d6c97a-8587-4801-aaca-f3c5f23e1105"
-      }
-    },
     "plugins": [
-      "expo-asset",
+      "expo-font",
       "react-native-edge-to-edge"
     ]
   }
