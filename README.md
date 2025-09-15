@@ -1,3 +1,43 @@
+# Panduan Build Expo
+Pastikan hapus folder node_modules terlebih dahulu. 
+
+1. ```npm install```
+2. set ANDROID_HOME path
+   - Buka View Advanced System Settings 
+   - Klik Enviroment Variables 
+   - Masukkan variable ANDROID_HOME 
+   - Masukkan value C:\Users\namauser\AppData\Local\Android\Sdk di System Variables dan User Variables 
+3. Download emulator SDK 35
+4. Enable long path
+   ```New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force```
+5. Hidupkan developer mode di Settings Windows > Systems > Developer Mode (ON)
+6. Restart Laptop 
+7. Download Ninja SDK Manager
+   - Download NDK di SDK Manager > SDK Tools di Android Studio terlebih dahulu.
+   - Download Ninja versi terbaru di https://github.com/ninja-build/ninja/releases , pilih yang ninja-win.zip kemudian extract folder zipnya.
+   - Jika sudah terdownload dan terekstrak, replace ninja.exe di C:\Users\namauser\AppData\Local\Android\Sdk\cmake\3.22.1\bin dengan ninja.exe terbaru. 
+8. Hapus /android kemudian jalankan npx expo prebuild 
+9. Edit file build.gradle di sistem-desa\android\app\build.gradle, pastikan dipaste dibagian kode android.defaultConfig
+    ```
+            externalNativeBuild {
+           cmake {
+              def cmakeDir = "${android.sdkDirectory}/cmake/3.22.1/bin"
+              def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
+              def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
+
+              arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
+                        "-DCMAKE_OBJECT_PATH_MAX=1024"
+           }
+        }
+      ```
+10. Tambahkan di file build.gradle di sistem-desa\android\app\build.gradle di line paling atas
+    ```import org.apache.tools.ant.taskdefs.condition.Os```
+11. Jika sudah, buka terminal lalu masukkan perintah 
+    ```npm run android-release```
+12. Hasil build app/release app dapat ditemukan di android/app/build/outputs/apk/release
+      
+
+
 # Starter Template with React Navigation
 
 This is a minimal starter template for React Native apps using Expo and React Navigation.
