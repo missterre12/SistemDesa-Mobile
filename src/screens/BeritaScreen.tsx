@@ -6,6 +6,7 @@ import {
     StatusBar,
     StyleSheet,
     Text,
+    Alert,
 } from "react-native";
 import Header from "../header/index";
 import SectionHeader from "../components/SectionHeader";
@@ -17,34 +18,56 @@ import { BeritaStackParamList } from "../navigation/BeritaStackNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { API_URL } from "../config";
+import { useAuth } from "../context/AuthContext";
+import { R2_PUBLIC_URL } from '../config';
 
 const BeritaScreen = () => {
-    const navigation =
-        useNavigation<NativeStackNavigationProp<BeritaStackParamList>>();
-    const [beritas, setBeritas] = useState([]);
+    const navigation = useNavigation<NativeStackNavigationProp<BeritaStackParamList>>();
+    const [beritas, setBeritas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [filteredBeritas, setFilteredBeritas] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const { isLoggedIn } = useAuth();
 
     useEffect(() => {
         const fetchBeritas = async () => {
+            if (!isLoggedIn) {
+                setBeritas([]);
+                setLoading(false);
+                return;
+            }
+
             try {
                 const token = await AsyncStorage.getItem("token");
+                if (!token) {
+                    Alert.alert("Error", "No token found. Please log in.");
+                    setBeritas([]);
+                    setLoading(false);
+                    return;
+                }
+
                 const response = await axios.get(`${API_URL}/api/beritas`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+
                 setBeritas(response.data.data);
-                setFilteredBeritas(response.data.data);
-            } catch (error) {
-                console.error("Gagal mengambil data berita:", error);
+            } catch (error: any) {
+                console.error("Failed to fetch news data:", error.response?.data || error.message);
+                Alert.alert("Error", "Gagal mengambil data berita. Silakan coba lagi.");
+                setBeritas([]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchBeritas();
-    }, []);
+    }, [isLoggedIn]);
+
+    // Derive filteredBeritas directly from the state
+    const filteredBeritas = beritas.filter((item: any) =>
+        item.judul.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -58,20 +81,15 @@ const BeritaScreen = () => {
                     />
                     <SearchBar
                         placeholder="Cari Berita..."
-                        onSearch={(text) => {
-                            const filtered = beritas.filter((item: any) =>
-                                item.judul.toLowerCase().includes(text.toLowerCase())
-                            );
-                            setFilteredBeritas(filtered);
-                        }}
+                        onSearch={setSearchTerm}
                     />
                     {loading ? (
                         <Text>Memuat berita...</Text>
-                    ) : (
+                    ) : filteredBeritas.length > 0 ? (
                         filteredBeritas.map((berita: any) => (
                             <ReportCard
                                 key={berita.berita_id}
-                                imageUrl={berita.photo ? `data:image/jpeg;base64,${berita.photo}` : "https://via.placeholder.com/600x400"}
+                                imageUrl={berita.photo_url ? `${R2_PUBLIC_URL}/${berita.photo_url}` : "https://via.placeholder.com/600x400"}
                                 date={new Date(berita.tanggal).toLocaleDateString("id-ID", {
                                     day: "numeric",
                                     month: "long",
@@ -79,9 +97,9 @@ const BeritaScreen = () => {
                                 })}
                                 title={berita.judul}
                                 description={
-                                    berita.kontent.length > 100
-                                        ? berita.kontent.slice(0, 100) + "..."
-                                        : berita.kontent
+                                    berita.konten?.length > 100
+                                        ? berita.konten.slice(0, 100) + "..."
+                                        : berita.konten
                                 }
                                 status={berita.status}
                                 reporter="Admin Desa"
@@ -91,9 +109,7 @@ const BeritaScreen = () => {
                                     navigation.navigate("DetailBerita", {
                                         title: berita.judul,
                                         description: berita.kontent,
-                                        imageUrl: berita.photo
-                                            ? `data:image/jpeg;base64,${berita.photo}`
-                                            : "https://via.placeholder.com/600x400",
+                                        imageUrl: berita.photo || "https://via.placeholder.com/600x400",
                                         date: new Date(berita.tanggal).toLocaleDateString("id-ID", {
                                             day: "numeric",
                                             month: "long",
@@ -105,8 +121,9 @@ const BeritaScreen = () => {
                                 }
                             />
                         ))
+                    ) : (
+                        <Text style={styles.noDataText}>Tidak ada berita yang tersedia.</Text>
                     )}
-
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -126,6 +143,10 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+    },
+    noDataText: {
+        marginTop: 20,
+        color: 'gray',
     },
 });
 

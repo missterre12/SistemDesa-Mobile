@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import ReportCard from "../components/ReportCard";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { R2_PUBLIC_URL } from '../config';
 
 type RootStackParamList = {
     DetailBerita: {
@@ -21,7 +22,7 @@ interface Berita {
     photo?: string;
     tanggal: string;
     judul: string;
-    kontent: string;
+    konten: string;
     status: string;
     kategori: string;
 }
@@ -37,7 +38,11 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
             {beritas.map((berita: any) => (
                 <ReportCard
                     key={berita.berita_id}
-                    imageUrl={berita.photo ? `data:image/jpeg;base64,${berita.photo}` : "https://via.placeholder.com/600"}
+                    imageUrl={
+                        berita.photo_url 
+                            ? `${R2_PUBLIC_URL}/${berita.photo_url}`
+                            : "https://via.placeholder.com/600x400"
+                    }
                     date={new Date(berita.tanggal).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "long",
@@ -45,9 +50,9 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
                     })}
                     title={berita.judul}
                     description={
-                        berita.kontent.length > 100
-                            ? berita.kontent.slice(0, 100) + "..."
-                            : berita.kontent
+                        berita.konten.length > 100
+                            ? berita.konten.slice(0, 100) + "..."
+                            : berita.konten
                     }
                     status={berita.status}
                     reporter="Admin Desa"
@@ -56,8 +61,10 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
                     onVote={() =>
                         navigation.navigate("DetailBerita", {
                             title: berita.judul,
-                            description: berita.kontent,
-                            imageUrl: berita.photo ? `data:image/jpeg;base64,${berita.photo}` : "https://via.placeholder.com/600",
+                            description: berita.konten,
+                            imageUrl: berita.photo_url 
+                                    ? `${R2_PUBLIC_URL}/${berita.photo_url}`
+                                    : "https://via.placeholder.com/600",
                             date: new Date(berita.tanggal).toLocaleDateString("id-ID", {
                                 day: "numeric",
                                 month: "long",

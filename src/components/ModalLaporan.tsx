@@ -1,60 +1,57 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker'; 
 import { Fontisto } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
 
 type TambahDataModalProps = {
     visible: boolean;
     onClose: () => void;
     onSubmit: (data: {
-        namaPelapor: string;
         tanggal: string;
         keluhan: string;
         deskripsi: string;
         lokasi: string;
         image: string | null;
+        namaPelapor: string;
     }) => void;
 };
 
 const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onSubmit }) => {
-    const [namaPelapor, setNamaPelapor] = useState<string>('');
+    const { user } = useAuth();
     const [tanggal] = useState<string>(new Date().toISOString().split('T')[0]);
     const [keluhan, setKeluhan] = useState<string>('');
     const [deskripsi, setDeskripsi] = useState<string>('');
     const [lokasi, setLokasi] = useState<string>('');
     const [image, setImage] = useState<string | null>(null);
 
-    const pickImage = async () => {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert('Permission Denied', 'Permission to access media library is required!');
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
-            allowsEditing: true,
+    const pickImage = () => {
+        launchImageLibrary({ mediaType: 'photo' }, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorCode) {
+                console.error('ImagePicker Error: ', response.errorCode, response.errorMessage);
+                Alert.alert('Error', 'Gagal memilih gambar.');
+            } else if (response.assets && response.assets.length > 0) {
+                const asset = response.assets[0];
+                setImage(asset.uri || null); 
+            }
         });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-        }
     };
 
     const handleSubmit = () => {
-        if (!namaPelapor || !tanggal || !keluhan || !deskripsi || !lokasi) {
+        if (!tanggal || !keluhan || !deskripsi || !lokasi) {
             Alert.alert("Peringatan", "Harap isi semua data terlebih dahulu.");
             return;
         }
-
+        
         onSubmit({
-            namaPelapor,
             tanggal,
             keluhan,
             deskripsi,
             lokasi,
             image,
+            namaPelapor: user?.nama || 'Anonim'
         });
 
         onClose();
@@ -64,8 +61,11 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
         <Modal visible={visible} animationType="slide" transparent>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.label}>Nama Pelapor</Text>
-                    <TextInput style={styles.input} value={namaPelapor} onChangeText={setNamaPelapor} placeholder="Masukkan nama" />
+                    <TextInput 
+                        style={[styles.input, { backgroundColor: '#f0f0f0' }]} 
+                        value={user?.nama || 'Memuat...'}
+                        editable={false}
+                    />
 
                     <Text style={styles.label}>Tanggal</Text>
                     <TextInput

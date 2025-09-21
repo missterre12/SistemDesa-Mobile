@@ -18,6 +18,20 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
     const [tujuanPengajuan, setTujuanPengajuan] = useState<string>('');
     const [jenisSurat, setJenisSurat] = useState<string>('');
 
+    const suratOptions = [
+        { label: '-- Pilihlah Jenis Surat --', value: '' },
+        { label: 'Surat Keterangan tidak mampu', value: 'tidak_mampu' },
+        { label: 'Surat Keterangan Pindah', value: 'pindah' },
+        { label: 'Surat Keterangan Kelahiran', value: 'kelahiran' },
+        { label: 'Surat Keterangan Kematian', value: 'kematian' },
+        { label: 'Surat Izin Mendirikan Bangunan (IMB) Sederhana', value: 'imb_sederhana' },
+    ];
+
+    const getJenisSuratLabel = (value: string) => {
+        const option = suratOptions.find(opt => opt.value === value);
+        return option ? option.label : suratOptions[0].label;
+    };
+
     useEffect(() => {
         if (initialData) {
             setTujuanPengajuan(initialData.tujuan_surat || '');
@@ -30,7 +44,6 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             Alert.alert('Tujuan pengajuan minimal 10 karakter');
             return;
         }
-
         if (jenisSurat) {
             onDataChange({
                 tujuan_surat: tujuanPengajuan,
@@ -41,7 +54,6 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             Alert.alert('Harap isi semua field di Form 2');
         }
     };
-
 
     const handlePrev = () => {
         onPrev();
@@ -70,17 +82,20 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Pilih Jenis Surat</Text>
                 <View style={styles.pickerContainer}>
+                    {/* ✅ FIX: Display the label based on the selected value */}
+                    <Text style={styles.pickerLabel}>
+                        {getJenisSuratLabel(jenisSurat)}
+                    </Text>
                     <Picker
                         selectedValue={jenisSurat}
                         style={styles.picker}
-                        onValueChange={(itemValue) => setJenisSurat(itemValue)}
+                        onValueChange={(itemValue) => {
+                            setJenisSurat(itemValue);
+                        }}
                     >
-                        <Picker.Item label="-- Pilihlah Jenis Surat --" value="" />
-                        <Picker.Item label="Surat Keterangan tidak mampu" value="tidak_mampu" />
-                        <Picker.Item label="Surat Keterangan Pindah" value="pindah" />
-                        <Picker.Item label="Surat Keterangan Kelahiran" value="kelahiran" />
-                        <Picker.Item label="Surat Keterangan Kematian" value="kematian" />
-                        <Picker.Item label="Surat Izin Mendirikan Bangunan (IMB) Sederhana" value="imb_sederhana" />
+                        {suratOptions.map((opt) => (
+                            <Picker.Item key={opt.value} label={opt.label} value={opt.value} />
+                        ))}
                     </Picker>
                 </View>
                 <Text style={styles.fileFormat}>Pilih jenis surat yang sesuai dengan kebutuhan Anda</Text>
@@ -141,8 +156,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: 308,
     },
+    pickerLabel: {
+        position: 'absolute',
+        top: 15,
+        left: 10,
+        fontSize: 16,
+        color: 'black',
+    },
     picker: {
         height: 50,
+        opacity: 0, 
     },
     fileFormat: {
         fontSize: 12,

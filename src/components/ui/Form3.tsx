@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 
 interface Form3Data {
-    ktp_photo?: string; // base64 string
-    kk_photo?: string;  // base64 string
+    ktp_photo?: string; 
+    kk_photo?: string; 
     setujuPernyataan?: boolean;
 }
 
@@ -18,86 +17,68 @@ interface Form3Props {
 }
 
 const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialData }) => {
-    const [ktpImage, setKtpImage] = useState<string | null>(null); // uri
-    const [kkImage, setKkImage] = useState<string | null>(null);   // uri
-    const [ktpBase64, setKtpBase64] = useState<string | null>(null);
-    const [kkBase64, setKkBase64] = useState<string | null>(null);
+    const [ktpLocalUri, setKtpLocalUri] = useState<string | null>(null);
+    const [kkLocalUri, setKkLocalUri] = useState<string | null>(null);
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
 
     useEffect(() => {
         if (initialData) {
+            if (initialData.ktp_photo) setKtpLocalUri(initialData.ktp_photo);
+            if (initialData.kk_photo) setKkLocalUri(initialData.kk_photo);
             if (initialData.setujuPernyataan !== undefined) {
                 setIsAgreed(initialData.setujuPernyataan);
             }
         }
     }, [initialData]);
 
-    const requestPermission = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Izin Diperlukan', 'Kami membutuhkan akses ke galeri Anda untuk memilih gambar.');
-            return false;
-        }
-        return true;
-    };
-
-    const pickImage = async (type: 'ktp' | 'kk') => {
-        const hasPermission = await requestPermission();
-        if (!hasPermission) return;
-
-        try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 0.8,
-            });
-
-            if (!result.canceled && result.assets.length > 0) {
-                const asset = result.assets[0];
-                const uri = asset.uri;
-
-                const base64 = await FileSystem.readAsStringAsync(uri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
-
-                const base64String = `data:image/jpeg;base64,${base64}`;
-
-                if (type === 'ktp') {
-                    setKtpImage(uri);
-                    setKtpBase64(base64String);
-                } else {
-                    setKkImage(uri);
-                    setKkBase64(base64String);
+    const pickImage = (type: 'ktp' | 'kk') => {
+        launchImageLibrary({ mediaType: 'photo' }, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorCode) {
+                console.log('ImagePicker Error: ', response.errorCode, response.errorMessage);
+                Alert.alert('Error', `Gagal memilih gambar: ${response.errorMessage}`);
+            } else if (response.assets && response.assets.length > 0) {
+                const uri = response.assets[0].uri;
+                if (uri) {
+                    if (type === 'ktp') {
+                        setKtpLocalUri(uri);
+                        onDataChange({ ...initialData, ktp_photo: uri });
+                    } else {
+                        setKkLocalUri(uri);
+                        onDataChange({ ...initialData, kk_photo: uri });
+                    }
                 }
             }
-        } catch (error) {
-            console.error('Error picking image:', error);
-            Alert.alert('Kesalahan', 'Terjadi kesalahan saat memilih gambar.');
-        }
+        });
     };
 
     const handleSubmit = () => {
-        if (!isAgreed) {
-            Alert.alert('Pernyataan', 'Harap setujui pernyataan terlebih dahulu.');
-            return;
-        }
+    if (!isAgreed) {
+        Alert.alert('Pernyataan', 'Harap setujui pernyataan terlebih dahulu.');
+        return;
+    }
 
-        if (!ktpBase64 || !kkBase64) {
-            Alert.alert('Unggah Dokumen', 'Harap unggah scan KTP dan Kartu Keluarga.');
-            return;
-        }
-
-        onDataChange({
-            ktp_photo: ktpBase64,
-            kk_photo: kkBase64,
-            setujuPernyataan: isAgreed,
-        });
-
-        onSubmit();
+    if (!ktpLocalUri || !kkLocalUri) {
+        Alert.alert('Unggah Dokumen', 'Harap unggah scan KTP dan Kartu Keluarga.');
+        return;
+    }
+    
+    const finalData = {
+        ktp_photo: ktpLocalUri,
+        kk_photo: kkLocalUri,
+        setujuPernyataan: isAgreed,
     };
+    
+    onDataChange(finalData);
+    onSubmit();
+};
 
-    const toggleAgreement = () => setIsAgreed(!isAgreed);
+    const toggleAgreement = () => {
+        const newAgreementState = !isAgreed;
+        setIsAgreed(newAgreementState);
+        onDataChange({ ...initialData, setujuPernyataan: newAgreementState });
+    };
 
     return (
         <View style={styles.container}>
@@ -108,17 +89,17 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             <View style={styles.documentContainer}>
                 <Text style={styles.label}>Scan KTP</Text>
                 <TouchableOpacity style={styles.filePicker} onPress={() => pickImage('ktp')}>
-                    <Text style={styles.filePickerText}>{ktpImage ? 'Ganti Gambar' : 'Pilih File'}</Text>
+                    <Text style={styles.filePickerText}>{ktpLocalUri ? 'Ganti Gambar' : 'Pilih File'}</Text>
                     <Feather name="upload" size={20} color="gray" />
                 </TouchableOpacity>
-                {ktpImage && (
+                {ktpLocalUri && (
                     <View style={styles.imagePreviewContainer}>
-                        <Image source={{ uri: ktpImage }} style={styles.imagePreview} />
+                        <Image source={{ uri: ktpLocalUri }} style={styles.imagePreview} />
                         <TouchableOpacity
                             style={styles.deleteButton}
                             onPress={() => {
-                                setKtpImage(null);
-                                setKtpBase64(null);
+                                setKtpLocalUri(null);
+                                onDataChange({ ...initialData, ktp_photo: undefined });
                             }}
                         >
                             <Feather name="x" size={16} color="white" />
@@ -132,17 +113,17 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             <View style={styles.documentContainer}>
                 <Text style={styles.label}>Scan Kartu Keluarga</Text>
                 <TouchableOpacity style={styles.filePicker} onPress={() => pickImage('kk')}>
-                    <Text style={styles.filePickerText}>{kkImage ? 'Ganti Gambar' : 'Pilih File'}</Text>
+                    <Text style={styles.filePickerText}>{kkLocalUri ? 'Ganti Gambar' : 'Pilih File'}</Text>
                     <Feather name="upload" size={20} color="gray" />
                 </TouchableOpacity>
-                {kkImage && (
+                {kkLocalUri && (
                     <View style={styles.imagePreviewContainer}>
-                        <Image source={{ uri: kkImage }} style={styles.imagePreview} />
+                        <Image source={{ uri: kkLocalUri }} style={styles.imagePreview} />
                         <TouchableOpacity
                             style={styles.deleteButton}
                             onPress={() => {
-                                setKkImage(null);
-                                setKkBase64(null);
+                                setKkLocalUri(null);
+                                onDataChange({ ...initialData, kk_photo: undefined });
                             }}
                         >
                             <Feather name="x" size={16} color="white" />
@@ -178,7 +159,7 @@ const Form3: React.FC<Form3Props> = ({ onSubmit, onPrev, onDataChange, initialDa
     );
 };
 
-// ✅ STYLES — unchanged
+// Styles
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 20 },
     title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginLeft: 30 },

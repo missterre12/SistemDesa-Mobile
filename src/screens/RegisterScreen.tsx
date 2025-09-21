@@ -1,4 +1,3 @@
-// screens/RegisterScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -40,7 +39,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [nik, setNik] = useState('');
   const [alamat, setAlamat] = useState('');
   const [noHp, setNoHp] = useState('');
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<string | null>(null); // This is now a file URI
 
   // Step 3: Selection fields
   const [jenisKelamin, setJenisKelamin] = useState('');
@@ -66,7 +65,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     return true;
   };
 
-  // Toggle for address detail textarea
   const toggleAddressDetail = () => {
     setShowAddressDetail(!showAddressDetail);
   };
@@ -110,14 +108,12 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const pickImage = async () => {
-    // Ask for permission
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Izin Diperlukan', 'Izin akses galeri diperlukan untuk memilih foto.');
       return;
     }
 
-    // Launch image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -130,63 +126,60 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const convertToBase64 = async (uri: string): Promise<string> => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const reader = new FileReader();
-
-    return new Promise((resolve, reject) => {
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-  };
-
   const handleRegister = async () => {
     if (!validateStep3()) return;
 
     setLoading(true);
 
     try {
-        const response = await fetch(`${API_URL}/api/users`, {
+      const formData = new FormData();
+      formData.append('nama', name);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('NIK', nik);
+      formData.append('agama', agama);
+      formData.append('alamat', alamat);
+      formData.append('jenis_kel', jenisKelamin);
+      formData.append('no_hp', noHp);
+      formData.append('role', 'user');
+      formData.append('email', email); 
+
+      if (photo) {
+        const fileName = photo.split('/').pop();
+        const fileType = 'image/jpeg';
+        formData.append('photo', {
+            uri: photo,
+            name: fileName,
+            type: fileType,
+        } as any);
+      }
+
+      const response = await fetch(`${API_URL}/api/users`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            nama: name,
-            username,
-            password,
-            NIK: nik,
-            agama,
-            alamat,
-            jenis_kel: jenisKelamin,
-            no_hp: noHp,
-            role: "user", // Or "admin" if needed
-            photo: photo ? await convertToBase64(photo) : null,
-        }),
-        });
+        body: formData,
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (!response.ok) {
+      if (!response.ok) {
         throw new Error(result.message || 'Registrasi gagal');
-        }
+      }
 
-        Alert.alert('Registrasi Berhasil', 'Akun berhasil dibuat!', [
+      Alert.alert('Registrasi Berhasil', 'Akun berhasil dibuat!', [
         { text: 'OK', onPress: () => navigation.navigate('Login') },
-        ]);
+      ]);
     } catch (error: any) {
-        Alert.alert('Error', error.message || 'Terjadi kesalahan');
+      console.error(error); // Log the error for debugging
+      Alert.alert('Error', error.message || 'Terjadi kesalahan');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Header title="REGISTER"/>
+        <Header title="REGISTER" />
         <View style={{ paddingTop: 20 }}>
           <StepIndicator currentStep={currentStep} totalSteps={3} />
         </View>

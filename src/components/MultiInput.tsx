@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import Form1 from '../components/ui/Form1';
 import Form2 from '../components/ui/Form2';
 import Form3 from '../components/ui/Form3';
@@ -11,7 +11,7 @@ import { API_URL } from '../config';
 import { useSocket } from '../context/SocketContext';
 
 interface Form1Data {
-    nama?: string;
+    // nama?: string;
     email?: string;
     nik?: string;
     tempat_lahir?: string;
@@ -40,13 +40,13 @@ interface FormData {
 }
 
 const MultiStepFormScreen: React.FC = () => {
+    const socket = useSocket();
     const [currentForm, setCurrentForm] = useState<number>(1);
     const [formData, setFormData] = useState<FormData>({
         form1Data: {},
         form2Data: {},
         form3Data: {},
     });
-
 
     const goToForm = (formNumber: number) => {
         setCurrentForm(formNumber);
@@ -61,57 +61,81 @@ const MultiStepFormScreen: React.FC = () => {
 
         const data = new FormData();
 
-        // === Append text fields from form1 and form2 ===
-        Object.entries(formData.form1Data).forEach(([key, value]) => {
-            if (value !== undefined) data.append(key, value);
+        // Loop through all form data and append to FormData object
+        Object.entries({
+            ...formData.form1Data,
+            ...formData.form2Data,
+            ...formData.form3Data,
+        }).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                // Exclude photo URIs as they are handled separately
+                if (key !== 'ktp_photo' && key !== 'kk_photo') {
+                    data.append(key, String(value));
+                }
+            }
         });
 
-        Object.entries(formData.form2Data).forEach(([key, value]) => {
-            if (value !== undefined) data.append(key, value);
-        });
+        const appendFile = async (fieldName: string, uri?: string) => {
+            if (!uri) return;
+            
+            // Determine file name and type from the URI
+            const fileName = uri.split('/').pop() || `${fieldName}.jpg`;
+            const fileType = `image/${fileName.split('.').pop()}`;
 
-        // === Append files from form3 ===
-        const appendFile = (fieldName: string, uri?: string) => {
-            if (uri) {
+            // Handle file differently for web and native
+            if (Platform.OS === 'web') {
+                const response = await fetch(uri);
+                const blob = await response.blob();
+                data.append(fieldName, blob, fileName);
+            } else {
+                // For native, use the URI to create a Blob-like object for FormData
                 data.append(fieldName, {
                     uri,
-                    name: `${fieldName}.jpg`,
-                    type: 'image/jpeg',
-                } as any); // cast to avoid TS errors
+                    name: fileName,
+                    type: fileType,
+                } as any);
             }
         };
 
-        appendFile('photo_ktp', formData.form3Data.ktp_photo);
-        appendFile('photo_kk', formData.form3Data.kk_photo);
-        // add other optional files like 'foto_usaha' if needed
+        if (!formData.form3Data.ktp_photo || !formData.form3Data.kk_photo) {
+            Alert.alert('Gagal', 'KTP dan KK wajib diunggah!');
+            return;
+        }
 
         try {
+            await Promise.all([
+                appendFile('photo_ktp', formData.form3Data.ktp_photo),
+                appendFile('photo_kk', formData.form3Data.kk_photo),
+            ]);
+            
+            console.log('Final FormData:', data);
+
             const response = await axios.post(
                 `${API_URL}/api/letters`,
                 data,
                 {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
                     },
                 }
             );
+
             Alert.alert('Sukses', 'Data berhasil dikirim!');
             console.log('Response:', response.data);
-            const socket = useSocket();
+
             if (socket) {
                 socket.emit("notification", {
                     title: "Surat Baru",
-                    body: `Surat baru dari: ${formData.form1Data.nama || 'Pengguna'}.`,
+                    body: `Ada surat baru!`,
                     time: new Date(),
                 });
             }
         } catch (err: any) {
-            console.error(err.response?.data || err.message);
+            console.error('Submission error:', err.response?.data || err.message);
             Alert.alert('Gagal', 'Terjadi kesalahan saat mengirim data');
         }
     };
-
 
     const updateFormData = (
         formNumber: 1 | 2 | 3,

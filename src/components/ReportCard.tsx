@@ -8,7 +8,7 @@ interface ReportCardProps {
     title: string;
     description: string;
     status: string;
-    reporter: string;
+    nama: string;
     location: string;
     onVote: () => void;
     buttonLabel?: string;
@@ -20,10 +20,10 @@ const ReportCard: React.FC<ReportCardProps> = ({
     title,
     description,
     status,
-    reporter,
+    nama,
     location,
     onVote,
-    buttonLabel = "Vote", // Default label jika tidak diberikan
+    buttonLabel = "Vote", 
 }) => {
     return (
         <View style={styles.card}>
@@ -41,7 +41,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
             </Text>
             <Text>
                 <Text style={styles.bold}>Pelapor: </Text>
-                {reporter}
+                {nama}
             </Text>
             <Text>
                 <Text style={styles.bold}>Lokasi: </Text>

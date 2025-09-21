@@ -1,3 +1,5 @@
+// in src/screens/EditProfilScreen.tsx
+
 import React, { useState, useEffect } from "react";
 import {
     View,
@@ -9,76 +11,80 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { API_URL } from "../config";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ProfilStackParamList } from "../navigation/ProfileStackNavigator";
+import { R2_PUBLIC_URL } from '../config';
+
+type EditProfileScreenNavigationProp = StackNavigationProp<ProfilStackParamList, 'EditProfile'>;
 
 export default function EditProfileScreen() {
     const [photo, setPhoto] = useState<string | null>(null);
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState<any>(null);
+    const [selectedFile, setSelectedFile] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const token = await AsyncStorage.getItem("token");
-                if (!token) return;
+    const navigation = useNavigation<EditProfileScreenNavigationProp>();
+    const route = useRoute();
+    const { onUpdate } = route.params as any; // Get the onUpdate callback
 
-                const decoded: any = jwtDecode(token);
-                const res = await axios.get(`${API_URL}/api/users/${decoded.user_id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+    const fetchUser = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            if (!token) return;
 
-                const user = res.data.data;
-                setUserData(user);
-                if (user.photo) {
-                    setPhoto(`${API_URL}/uploads/${user.photo}`);
-                } else {
-                    setPhoto(user.photo); // already base64
-                }
-            } catch (error) {
-                console.error("Error loading user data:", error);
-            }
-        };
+            const decoded: any = jwtDecode(token);
+            const res = await axios.get(`${API_URL}/api/users/${decoded.user_id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
-        fetchUser();
-    }, []);
-
-    const handlePickImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
-            allowsEditing: true,
-            base64: true,
-        });
-
-        if (!result.canceled && result.assets.length > 0) {
-            const asset = result.assets[0];
-            const base64 = asset.base64;
-            const uri = asset.uri;
-            const extension = uri.split(".").pop()?.toLowerCase();
-
-            const mimeType =
-                extension === "png"
-                    ? "image/png"
-                    : extension === "jpg" || extension === "jpeg"
-                        ? "image/jpeg"
-                        : "image/jpeg"; // fallback
-
-            if (base64) {
-                setPhoto(`data:${mimeType};base64,${base64}`);
-            } else {
-                setPhoto(uri); // fallback
-            }
+            const user = res.data.data;
+            setUserData(user);
+            setPhoto(user.photo_url || null);
+        } catch (error) {
+            console.error("Error loading user data:", error);
+            Alert.alert("Error", "Gagal memuat data pengguna.");
+        } finally {
+            setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchUser();
+    }, []);
+
+    const handlePickImage = () => {
+        launchImageLibrary({ mediaType: 'photo' }, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorCode) {
+                console.error('ImagePicker Error: ', response.errorCode, response.errorMessage);
+                Alert.alert('Error', 'Gagal memilih gambar.');
+            } else if (response.assets && response.assets.length > 0) {
+                const asset = response.assets[0];
+                setPhoto(asset.uri || null); 
+                setSelectedFile(asset);
+            }
+        });
+    };
+
     const handleSave = async () => {
+        if (!userData) return;
+        setLoading(true);
+
         try {
             const token = await AsyncStorage.getItem("token");
-            if (!token || !userData) return;
+            if (!token) {
+                Alert.alert("Gagal", "Token tidak ditemukan.");
+                setLoading(false);
+                return;
+            }
 
             const formData = new FormData();
             formData.append("username", userData.username);
@@ -86,53 +92,66 @@ export default function EditProfileScreen() {
             formData.append("alamat", userData.alamat);
 
             if (password && password.length >= 6) {
-                formData.append("password", password); 
+                formData.append("password", password);
             }
 
-            if (photo && !photo.startsWith(API_URL)) {
-                if (photo.startsWith("data:image")) {
-                    // It's base64
-                    formData.append("photo", photo);
-                } else {
-                    // It's file URI
-                    const filename = photo.split("/").pop();
-                    const match = /\.(\w+)$/.exec(filename || "");
-                    const type = match ? `image/${match[1]}` : `image`;
+            if (selectedFile) {
+                const filename = selectedFile.uri?.split("/").pop();
+                const match = /\.(\w+)$/.exec(filename || "");
+                const type = match ? `image/${match[1]}` : `image/jpeg`;
 
-                    formData.append("photo", {
-                        uri: photo,
-                        name: filename,
-                        type,
-                    } as any);
-                }
+                formData.append("photo", {
+                    uri: selectedFile.uri,
+                    name: filename,
+                    type,
+                } as any);
+            } else {
+                console.log("No new photo selected.");
             }
 
             const decoded: any = jwtDecode(token);
-            await axios.patch(`${API_URL}/api/users/${decoded.user_id}`, formData, {
+            const res = await axios.patch(`${API_URL}/api/users/${decoded.user_id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 },
             });
 
-            Alert.alert("Berhasil", "Profil berhasil diperbarui.");
-        } catch (error) {
-            console.error(error);
+            const newUserData = res.data.data;
+
+            if (onUpdate) {
+                onUpdate(newUserData); // ✅ Pass the new data back to ProfilScreen
+            }
+            
+            Alert.alert("Berhasil", "Profil berhasil diperbarui.", [
+                {
+                    text: "OK",
+                    onPress: () => {
+                        navigation.goBack();
+                    },
+                },
+            ]);
+        } catch (error: any) {
+            console.error("Error saving profile:", error.response?.data || error.message);
             Alert.alert("Gagal", "Terjadi kesalahan saat menyimpan.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    const isPhotoValid =
-        photo &&
-        (photo.startsWith("http") ||
-            photo.startsWith("file:") ||
-            photo.startsWith("data:image"));
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <TouchableOpacity onPress={handlePickImage} style={styles.imageContainer}>
-                {isPhotoValid ? (
-                    <Image source={{ uri: photo }} style={styles.image} />
+                {photo ? (
+                    <Image source={{ uri: `${R2_PUBLIC_URL}/${userData.photo_url}` }} style={styles.image} />
                 ) : (
                     <Text style={styles.imagePlaceholder}>Pick Photo</Text>
                 )}
@@ -169,7 +188,11 @@ export default function EditProfileScreen() {
 
             {["NIK", "nama", "jenis_kel", "agama", "role"].map((key) => (
                 <View key={key}>
-                    <Text style={styles.label}>{key.toUpperCase()}</Text>
+                    <Text style={styles.label}>
+                        {key === "NIK"
+                            ? key.toUpperCase()
+                            : key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
+                    </Text>
                     <TextInput
                         style={[styles.input, styles.disabledInput]}
                         value={userData?.[key] || ""}
@@ -188,6 +211,11 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     imageContainer: {
         alignSelf: "center",
