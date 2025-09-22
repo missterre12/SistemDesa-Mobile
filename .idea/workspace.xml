@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18010fd1-dec7-4165-b840-2a232ac57c10" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BeritaList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BeritaList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MultiInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MultiInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Form3.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/Form3.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/BeritaScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/BeritaScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/EditProfilScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/EditProfilScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/LaporanScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/LaporanScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/ProfilScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/ProfilScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/RegisterScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/RegisterScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +54,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "Reverting in dev-melissa",
+    "git-widget-placeholder": "dev-melissa",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/User/Downloads/SistemDesa-Mobile",
     "settings.editor.selected.configurable": "AndroidSdkUpdater",

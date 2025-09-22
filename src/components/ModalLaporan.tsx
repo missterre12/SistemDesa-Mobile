@@ -13,7 +13,7 @@ type TambahDataModalProps = {
         deskripsi: string;
         lokasi: string;
         image: string | null;
-        namaPelapor: string;
+        nama: string;
     }) => void;
 };
 
@@ -51,7 +51,7 @@ const TambahDataModal: React.FC<TambahDataModalProps> = ({ visible, onClose, onS
             deskripsi,
             lokasi,
             image,
-            namaPelapor: user?.nama || 'Anonim'
+            nama: user?.nama || 'Anonim'
         });
 
         onClose();

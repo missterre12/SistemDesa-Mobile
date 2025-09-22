@@ -177,7 +177,7 @@ const LaporanScreen = () => {
                                 title={laporan.keluhan}
                                 description={laporan.deskripsi}
                                 status={laporan.status}
-                                nama={laporan.nama}
+                                nama={laporan.user.nama}
                                 location={laporan.lokasi}
                                 onVote={async () => {
                                     try {

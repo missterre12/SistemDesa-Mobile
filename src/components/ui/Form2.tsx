@@ -45,9 +45,11 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             return;
         }
         if (jenisSurat) {
+            const selectedOption = suratOptions.find(opt => opt.value === jenisSurat);
+            const jenisSuratLabel = selectedOption ? selectedOption.label : jenisSurat;
             onDataChange({
                 tujuan_surat: tujuanPengajuan,
-                jenis_surat: jenisSurat,
+                jenis_surat: jenisSuratLabel,
             });
             onSubmit();
         } else {

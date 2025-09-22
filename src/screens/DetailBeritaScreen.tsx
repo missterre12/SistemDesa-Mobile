@@ -1,8 +1,6 @@
-import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { BeritaStackParamList } from "../navigation/BeritaStackNavigator";
-import { R2_PUBLIC_URL } from '../config';
 
 type DetailRouteProp = RouteProp<BeritaStackParamList, "DetailBerita">;
 

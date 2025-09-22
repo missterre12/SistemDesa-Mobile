@@ -7,7 +7,7 @@ interface Form1Data {
    nik?: string;
    nama?: string;
    tempat_lahir?: string;
-//    tanggal_lahir?: string;
+   tanggal_lahir?: string;
    jenis_kelamin?: string;
    agama?: string;
    alamat?: string;
@@ -25,7 +25,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
    const [nik, setNik] = useState('');
    const [nama, setNama] = useState('');
    const [tempatLahir, setTempatLahir] = useState('');
-//    const [tanggalLahir, setTanggalLahir] = useState('');
+   const [tanggalLahir, setTanggalLahir] = useState('');
    const [jenisKelamin, setJenisKelamin] = useState('');
    const [agama, setAgama] = useState('');
    const [alamat, setAlamat] = useState('');
@@ -33,8 +33,8 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
    const [email, setEmail] = useState('');
    const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
    const [isAgamaModalVisible, setIsAgamaModalVisible] = useState(false);
-//    const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-//    const [date, setDate] = useState<Date | undefined>(initialData?.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
+   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+   const [date, setDate] = useState<Date | undefined>(initialData?.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
    const [isEditable, setIsEditable] = useState(false);
    const tanggalLahirRef = useRef<TextInput>(null);
 
@@ -57,8 +57,8 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
            setNik(initialData.nik || '');
            setNama(initialData.nama || '');
            setTempatLahir(initialData.tempat_lahir || '');
-        //    setTanggalLahir(initialData.tanggal_lahir || '');
-        //    setDate(initialData.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
+           setTanggalLahir(initialData.tanggal_lahir || '');
+           setDate(initialData.tanggal_lahir ? new Date(initialData.tanggal_lahir) : undefined);
            setJenisKelamin(initialData.jenis_kelamin || '');
            setAgama(initialData.agama || '');
            setAlamat(initialData.alamat || '');
@@ -83,7 +83,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
            nik,
            nama,
            tempat_lahir: tempatLahir,
-        //    tanggal_lahir: tanggalLahir,
+           tanggal_lahir: tanggalLahir,
            jenis_kelamin: jenisKelamin,
            agama,
            alamat,

@@ -1,7 +1,7 @@
+import org.apache.tools.ant.taskdefs.condition.Os
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply plugin: "org.apache.tools.ant.taskdefs.condition.Os"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
@@ -96,14 +96,14 @@ android {
         versionCode 1
         versionName "1.0.0"
         externalNativeBuild {
-            cmake {
-                def cmakeDir = "${android.sdkDirectory}/cmake/3.22.1/bin"
-                def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
-                def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
+           cmake {
+              def cmakeDir = "${android.sdkDirectory}/cmake/3.22.1/bin"
+              def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
+              def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
 
-                arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
-                    "-DCMAKE_OBJECT_PATH_MAX=1024"
-            }
+              arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
+                        "-DCMAKE_OBJECT_PATH_MAX=1024"
+           }
         }
     }
     signingConfigs {

@@ -102,7 +102,7 @@ const BeritaScreen = () => {
                                         : berita.konten
                                 }
                                 status={berita.status}
-                                reporter="Admin Desa"
+                                nama="Admin Desa"
                                 location={berita.kategori}
                                 buttonLabel="Baca Selengkapnya"
                                 onVote={() =>

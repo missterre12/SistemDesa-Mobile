@@ -25,6 +25,10 @@ interface Berita {
     konten: string;
     status: string;
     kategori: string;
+    user?: {
+        nama: string;
+        no_hp: string;
+    };
 }
 
 interface BeritaListProps {
@@ -55,7 +59,7 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
                             : berita.konten
                     }
                     status={berita.status}
-                    reporter="Admin Desa"
+                    nama={berita.user?.nama || "Admin Desa"}
                     location={berita.kategori}
                     buttonLabel="Baca Selengkapnya"
                     onVote={() =>
@@ -70,7 +74,7 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
                                 month: "long",
                                 year: "numeric",
                             }),
-                            reporter: "Admin Desa",
+                            reporter: berita.user?.nama || "Admin Desa",
                             location: berita.kategori,
                         })
                     }
