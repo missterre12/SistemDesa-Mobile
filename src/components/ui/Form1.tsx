@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-// import DateTimePicker from '@react-native-community/datetimepicker'; 
+import DateTimePicker from '@react-native-community/datetimepicker'; 
 
 interface Form1Data {
    nik?: string;
@@ -74,7 +74,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
    }, [isEditable]);
 
    const handleNext = () => {
-       if (!nik || !nama || !tempatLahir || /* !tanggalLahir || */ !jenisKelamin || !agama || !alamat || !nomorTelepon || !email) {
+       if (!nik || !nama || !tempatLahir || !tanggalLahir || !jenisKelamin || !agama || !alamat || !nomorTelepon || !email) {
            Alert.alert('Harap isi semua field di Form 1');
            return;
        }
@@ -105,30 +105,29 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
        setIsAgamaModalVisible(false);
    };
 
-//    const showDatePicker = () => {
-//        setIsDatePickerVisible(true);
-//    };
+   const showDatePicker = () => {
+       setIsDatePickerVisible(true);
+   };
 
-//    const hideDatePicker = () => {
-//        setIsDatePickerVisible(false);
-//    };
+   const hideDatePicker = () => {
+       setIsDatePickerVisible(false);
+   };
 
-//    const handleDateChange = (event: any, selectedDate: Date | undefined) => {
-//        hideDatePicker();
-//        const currentDate = selectedDate || date;
-//        if (currentDate) {
-//            setDate(currentDate);
-//            const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
-//            setTanggalLahir(formattedDate);
-//        }
-//    };
+   const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+       hideDatePicker();
+       const currentDate = selectedDate || date;
+       if (currentDate) {
+           setDate(currentDate);
+           const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+           setTanggalLahir(formattedDate);
+       }
+   };
 
    return (
        <View>
            <Text style={styles.title}>Data Pribadi</Text>
            <Text style={styles.subtitle}>Masukkan data pribadi Anda sesuai dengan KTP</Text>
            
-           {/* Field NIK */}
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>NIK</Text>
                <TextInput
@@ -141,7 +140,6 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                <Text style={styles.fileFormat}>Masukkan 16 digit NIK Anda</Text>
            </View>
            
-           {/* Nama Lengkap */}
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>Nama Lengkap</Text>
                <TextInput
@@ -153,7 +151,6 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                <Text style={styles.fileFormat}>Gunakan nama lengkap sesuai KTP</Text>
            </View>
 
-           {/* Tempat Lahir */}
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>Tempat Lahir</Text>
                <TextInput
@@ -165,7 +162,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                <Text style={styles.fileFormat}>Tuliskan nama kota tempat lahir Anda</Text>
            </View>
 
-           {/* Tanggal Lahir
+           Tanggal Lahir
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>Tanggal Lahir</Text>
                <TouchableOpacity style={styles.dateInputContainer} onPress={showDatePicker}>
@@ -191,9 +188,8 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                    display="default"
                    onChange={handleDateChange}
                />
-           )} */}
+           )}
 
-           {/* Jenis Kelamin */}
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>Jenis Kelamin</Text>
                <TouchableOpacity
@@ -271,7 +267,6 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                </TouchableOpacity>
            </View>
            
-           {/* ... (rest of the modals and styles) ... */}
            <Modal
                visible={isGenderModalVisible}
                transparent={true}
