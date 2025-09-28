@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Alert
+  Alert,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../navigation';
@@ -14,37 +14,36 @@ import Header from '../components/log/Header';
 import InputField from '../components/log/InputField';
 import AuthButton from '../components/log/LogButton';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
 interface Props {
   navigation: LoginScreenNavigationProp;
-  onLoginSuccess: () => void;
 }
 
-const LoginScreen: React.FC<Props> = ({ navigation, onLoginSuccess }) => {
+const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth(); 
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-        const res = await axios.post(`${API_URL}/api/login`, {
+      const res = await axios.post(`${API_URL}/api/login`, {
         username: email,
         password,
-        });
+      });
 
-        const token = res.data.token;
-        await AsyncStorage.setItem('token', token);
+      const token = res.data.token;
+      await login(token); 
 
-        setLoading(false);
-        onLoginSuccess(); 
+      setLoading(false);
     } catch (error) {
-        setLoading(false);
-        Alert.alert("Email atau password salah");
+      setLoading(false);
+      Alert.alert('Email atau password salah');
     }
   };
 

@@ -7,9 +7,8 @@ type Props = {
     setIsLoggedIn: (val: boolean) => void;
 };
 
-// Define the navigation parameter types
 export type ProfilStackParamList = {
-    Profil: undefined; // The Profil screen doesn't receive initial params from here
+    Profil: undefined; 
     EditProfile: { 
         onUpdate: (updatedUser: any) => void; 
     };
@@ -17,7 +16,6 @@ export type ProfilStackParamList = {
 
 const ProfileStack = createNativeStackNavigator<ProfilStackParamList>();
 
-// Define the props for ProfilScreen, including navigation props and custom props
 type ProfilScreenProps = NativeStackScreenProps<ProfilStackParamList, 'Profil'> & Props;
 
 const ProfileStackNavigator: React.FC<Props> = ({ setIsLoggedIn }) => {

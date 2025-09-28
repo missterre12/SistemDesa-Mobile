@@ -1,5 +1,3 @@
-// in src/screens/ProfilScreen.tsx
-
 import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -71,11 +69,11 @@ const ProfilScreen: React.FC = () => { // Removed setIsLoggedIn from props
         Alert.alert("Konfirmasi Logout", "Apakah Anda yakin ingin keluar?", [
             { text: "Batal", style: "cancel" },
             {
-                text: "Ya, Logout",
-                onPress: async () => {
-                    await AsyncStorage.removeItem("token");
-                    logout();
-                },
+            text: "Ya, Logout",
+            onPress: async () => {
+                await AsyncStorage.removeItem("token");
+                logout();
+            },
             },
         ]);
     };
