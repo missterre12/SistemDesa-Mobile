@@ -19,13 +19,11 @@ import axios from "axios";
 import { API_URL, R2_PUBLIC_URL } from "../config";
 import { useFocusEffect } from "@react-navigation/native";
 import TambahDataModal from "../components/ModalLaporan";
-import { useSocket } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
 
 const LaporanScreen = () => {
     const [laporans, setLaporans] = useState<any[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const socket = useSocket();
     const { isLoggedIn, user } = useAuth();
 
     const fetchLaporans = useCallback(async () => {
@@ -97,14 +95,6 @@ const LaporanScreen = () => {
             await axios.post(`${API_URL}/api/reports`, formData, {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
             });
-
-            if (socket) {
-                socket.emit("notification", {
-                    title: "Laporan Baru",
-                    body: `Ada laporan baru: ${data.keluhan}`,
-                    time: new Date(),
-                });
-            }
 
             setModalVisible(false);
             fetchLaporans();

@@ -70,7 +70,7 @@ const Header: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {showNotificationDropdown && <NotificationDropdown notifications={[]} />}
+      {showNotificationDropdown && <NotificationDropdown />}
     </View>
   );
 };

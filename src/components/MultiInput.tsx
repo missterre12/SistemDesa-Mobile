@@ -61,14 +61,12 @@ const MultiStepFormScreen: React.FC = () => {
 
         const data = new FormData();
 
-        // Loop through all form data and append to FormData object
         Object.entries({
             ...formData.form1Data,
             ...formData.form2Data,
             ...formData.form3Data,
         }).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
-                // Exclude photo URIs as they are handled separately
                 if (key !== 'ktp_photo' && key !== 'kk_photo') {
                     data.append(key, String(value));
                 }
@@ -77,18 +75,16 @@ const MultiStepFormScreen: React.FC = () => {
 
         const appendFile = async (fieldName: string, uri?: string) => {
             if (!uri) return;
-            
+
             // Determine file name and type from the URI
             const fileName = uri.split('/').pop() || `${fieldName}.jpg`;
             const fileType = `image/${fileName.split('.').pop()}`;
 
-            // Handle file differently for web and native
             if (Platform.OS === 'web') {
                 const response = await fetch(uri);
                 const blob = await response.blob();
                 data.append(fieldName, blob, fileName);
             } else {
-                // For native, use the URI to create a Blob-like object for FormData
                 data.append(fieldName, {
                     uri,
                     name: fileName,
@@ -107,7 +103,7 @@ const MultiStepFormScreen: React.FC = () => {
                 appendFile('photo_ktp', formData.form3Data.ktp_photo),
                 appendFile('photo_kk', formData.form3Data.kk_photo),
             ]);
-            
+
             console.log('Final FormData:', data);
 
             const response = await axios.post(
@@ -124,13 +120,7 @@ const MultiStepFormScreen: React.FC = () => {
             Alert.alert('Sukses', 'Data berhasil dikirim!');
             console.log('Response:', response.data);
 
-            if (socket) {
-                socket.emit("notification", {
-                    title: "Surat Baru",
-                    body: `Ada surat baru!`,
-                    time: new Date(),
-                });
-            }
+            socket?.emit("surat:new", { message: "Surat baru dibuat!" });
         } catch (err: any) {
             console.error('Submission error:', err.response?.data || err.message);
             Alert.alert('Gagal', 'Terjadi kesalahan saat mengirim data');
