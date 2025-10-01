@@ -5,10 +5,10 @@ import { AuthProvider } from "./context/AuthContext";
 
 export function App() {
     return (
-        <AuthProvider>
-            <SocketProvider>
+        <SocketProvider>
+            <AuthProvider>
                 <AppNavigator />
-            </SocketProvider>
-        </AuthProvider>
+            </AuthProvider>
+        </SocketProvider>
     );
 }

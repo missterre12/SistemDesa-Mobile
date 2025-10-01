@@ -6,6 +6,7 @@ type ButtonProps = {
    onPress: () => void;
    backgroundColor?: string;
    textColor?: string;
+   disabled?: boolean;
 };
 
 const CustomButton: React.FC<ButtonProps> = ({
@@ -13,13 +14,20 @@ const CustomButton: React.FC<ButtonProps> = ({
    onPress,
    backgroundColor = "#003C43",
    textColor = "#ffffff",
+   disabled = false,
 }) => {
    return (
       <TouchableOpacity
-         style={[styles.button, { backgroundColor }]} 
+         style={[
+            styles.button,
+            { backgroundColor: disabled ? "#ccc" : backgroundColor },
+         ]}
          onPress={onPress}
+         disabled={disabled} 
       >
-         <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+         <Text style={[styles.text, { color: disabled ? "#888" : textColor }]}>
+            {title}
+         </Text>
       </TouchableOpacity>
    );
 };

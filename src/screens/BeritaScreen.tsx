@@ -64,10 +64,9 @@ const BeritaScreen = () => {
         fetchBeritas();
     }, [isLoggedIn]);
 
-    // Derive filteredBeritas directly from the state
-    const filteredBeritas = beritas.filter((item: any) =>
-        item.judul.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredBeritas = beritas
+    .filter((item: any) => item.status === "Dipublikasikan")
+    .filter((item: any) =>item.judul.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
         <SafeAreaView style={styles.container}>
@@ -104,6 +103,7 @@ const BeritaScreen = () => {
                                 status={berita.status}
                                 nama="Admin Desa"
                                 location={berita.kategori}
+                                locationLabel="Kategori"
                                 buttonLabel="Baca Selengkapnya"
                                 onVote={() =>
                                     navigation.navigate("DetailBerita", {

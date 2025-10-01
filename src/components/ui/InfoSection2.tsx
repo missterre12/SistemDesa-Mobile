@@ -13,8 +13,7 @@ const VisiMisi: React.FC<Props> = () => {
          <Text style={styles.sectionTitle}>Visi</Text>
          <View style={styles.visiContainer}>
             <Text style={styles.visiText}>
-               " Terwujudnya Desa Maju Sejahtera yang mandiri, sejahtera, dan berkeadilan berbasis pertanian,
-               pendidikan, dan teknologi menuju masyarakat yang beriman dan bertaqwa. "
+               "Terwujudnya Desa Hamparan Perak yang maju, mandiri, sejahtera. "
             </Text>
          </View>
          </View>
@@ -24,27 +23,11 @@ const VisiMisi: React.FC<Props> = () => {
          <View style={styles.misiContainer}>
             <View style={styles.misiItem}>
                <Text style={styles.misiNumber}>1.</Text>
-               <Text style={styles.misiText}>Meningkatkan kualitas pelayanan publik dan penyelenggaraan pemerintahan desa yang transparan dan akuntabel.</Text>
+               <Text style={styles.misiText}>Meningkatkan kualitas pelayanan administrasi desa yang cepat, mudah, dan transparan.</Text>
             </View>
             <View style={styles.misiItem}>
                <Text style={styles.misiNumber}>2.</Text>
-               <Text style={styles.misiText}>Meningkatkan kualitas infrastruktur dasar untuk mendukung aktivitas ekonomi desa.</Text>
-            </View>
-            <View style={styles.misiItem}>
-               <Text style={styles.misiNumber}>3.</Text>
-               <Text style={styles.misiText}>Mengembangkan potensi ekonomi lokal dengan fokus pada sektor pertanian, UMKM, dan pariwisata desa.</Text>
-            </View>
-            <View style={styles.misiItem}>
-               <Text style={styles.misiNumber}>4.</Text>
-               <Text style={styles.misiText}>Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan.</Text>
-            </View>
-            <View style={styles.misiItem}>
-               <Text style={styles.misiNumber}>5.</Text>
-               <Text style={styles.misiText}>Melestarikan nilai - nilai budaya dan kearifan lokal dalam kehidupan bermasyarakat.</Text>
-            </View>
-            <View style={styles.misiItem}>
-               <Text style={styles.misiNumber}>6.</Text>
-               <Text style={styles.misiText}>Meningkatkan partisipasi masyarakat dalam pembangunan desa.</Text>
+               <Text style={styles.misiText}>Mengembangkan potensi ekonomi dan pemberdayaan masyarakat untuk kesejahteraan bersama.</Text>
             </View>
          </View>
          </View>

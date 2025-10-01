@@ -51,7 +51,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView contentContainerStyle={styles.container}>
         <Header title="LOGIN" />
-        <Text style={styles.appTitle}>Sistem Desa Digital</Text>
+        <Text style={styles.appTitle}>Desa Hamparan Perak</Text>
         <Text style={styles.appDescription}>
           Aplikasi pelayanan masyarakat terkait surat menyurat laporan masyarakat
         </Text>

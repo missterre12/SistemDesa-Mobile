@@ -162,7 +162,6 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                <Text style={styles.fileFormat}>Tuliskan nama kota tempat lahir Anda</Text>
            </View>
 
-           Tanggal Lahir
            <View style={styles.fieldContainer}>
                <Text style={styles.label}>Tanggal Lahir</Text>
                <TouchableOpacity style={styles.dateInputContainer} onPress={showDatePicker}>
@@ -170,7 +169,7 @@ const Form1: React.FC<Form1Props> = ({ onSubmit, onDataChange, initialData }) =>
                        style={styles.dateInput}
                        placeholder="hh / bb / tttt"
                        value={tanggalLahir}
-                       editable={false}
+                       editable={true}
                    />
                    <View style={styles.datePickerButton}>
                        <Feather name="calendar" size={20} color="gray" />

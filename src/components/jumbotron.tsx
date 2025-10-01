@@ -25,7 +25,7 @@ const Jumbotron: React.FC = () => {
          <Card.Content style={styles.content}>
          <View style={styles.textContainer}>
             <Text variant="headlineMedium" style={styles.title}>
-               Portal Desa Digital
+               Smartdesa Hamparan Perak
             </Text>
             <Text variant="bodyMedium" style={styles.subtitle}>
                Akses layanan desa dengan mudah dan cepat melalui platform digital

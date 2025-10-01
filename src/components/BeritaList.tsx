@@ -23,7 +23,6 @@ interface Berita {
     tanggal: string;
     judul: string;
     konten: string;
-    status: string;
     kategori: string;
     user?: {
         nama: string;
@@ -61,6 +60,7 @@ const BeritaList: React.FC<BeritaListProps> = ({ beritas, navigation }) => {
                     status={berita.status}
                     nama={berita.user?.nama || "Admin Desa"}
                     location={berita.kategori}
+                    locationLabel="Kategori"
                     buttonLabel="Baca Selengkapnya"
                     onVote={() =>
                         navigation.navigate("DetailBerita", {

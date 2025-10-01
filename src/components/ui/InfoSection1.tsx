@@ -8,19 +8,18 @@ const TentangDesa: React.FC<Props> = () => {
       <ScrollView style={styles.container}>
          <View style={styles.section}>
          <Text style={styles.paragraph}>
-            Desa Maju Sejahtera didirikan pada tahun 1945 setelah kemerdekaan Indonesia. Awalnya, desa ini merupakan
-            pemukiman kecil yang dihuni oleh beberapa keluarga petani yang mengolah lahan subur di sekitar sungai.
+            Desa Hamparan Perak adalah salah satu desa di Kecamatan Hamparan Perak, Kabupaten Deli Serdang, Sumatera
+            Utara. Desa ini dipimpin oleh Kepala Desa Muhammad Helmi dan terdiri dari 10 dusun. 
          </Text>
          </View>
 
          <View style={styles.section}>
          <Text style={styles.paragraph}>
-            Nama "Maju Sejahtera" diberikan oleh pendiri desa, Bapak Soekarno (bukan presiden), yang memiliki visi agar desa ini
-            dapat maju dan sejahtera di masa depan. Seiring berjalannya waktu, desa ini berkembang menjadi pusat pertanian yang
-            produktif di kabupaten.
+            Sebagian besar warga bermata pencaharian di bidang pertanian, perikanan, dan perdagangan. Saat ini, desa
+            mulai mengembangkan layanan digital melalui aplikasi Smart Desa untuk mempermudah pelayanan kepada masyarakat.
          </Text>
          </View>
-
+{/* 
          <View style={styles.section}>
          <Text style={styles.paragraph}>
             Pada tahun 1970-an, desa ini mulai mengembangkan infrastruktur dasar seperti jalan, saluran irigasi, dan fasilitas
@@ -33,7 +32,7 @@ const TentangDesa: React.FC<Props> = () => {
             Saat ini, Desa Maju Sejahtera telah bertransformasi menjadi desa yang mandiri dengan berbagai potensi ekonomi, tidak
             hanya pertanian tetapi juga kerajinan tangan, pariwisata desa, dan UMKM.
          </Text>
-         </View>
+         </View> */}
       </ScrollView>
    );
 };

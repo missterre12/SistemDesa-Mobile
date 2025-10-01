@@ -10,7 +10,9 @@ interface ReportCardProps {
     status: string;
     nama: string;
     location: string;
+    locationLabel?: string;
     onVote: () => void;
+    buttonDisabled?: boolean;
     buttonLabel?: string;
 }
 
@@ -22,7 +24,9 @@ const ReportCard: React.FC<ReportCardProps> = ({
     status,
     nama,
     location,
+    locationLabel = "Lokasi",
     onVote,
+    buttonDisabled,
     buttonLabel = "Vote", 
 }) => {
     return (
@@ -44,10 +48,10 @@ const ReportCard: React.FC<ReportCardProps> = ({
                 {nama}
             </Text>
             <Text>
-                <Text style={styles.bold}>Lokasi: </Text>
+                <Text style={styles.bold}>{locationLabel}: </Text>
                 {location}
             </Text>
-            <CustomButton title={buttonLabel} onPress={onVote} />
+            <CustomButton title={buttonLabel} onPress={onVote} disabled={buttonDisabled} />
         </View>
     );
 };
