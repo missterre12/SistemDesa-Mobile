@@ -2,7 +2,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LayananScreen from "../screens/LayananScreen";
 import AjukanSuratScreen from "../screens/AjukanSurat"; 
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<LayananStackParamList>();
+
+export type LayananStackParamList = {
+  LayananUtama: undefined;
+  AjukanSurat: undefined;
+};
 
 const LayananStackNavigator = () => {
    return (

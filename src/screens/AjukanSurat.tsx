@@ -1,27 +1,27 @@
-// File: screens/LayananScreen.tsx
 import React from "react";
-import { View, ScrollView, SafeAreaView, StatusBar, StyleSheet } from "react-native";
-import SectionHeader from "../components/SectionHeader";
+import { ScrollView, StyleSheet, StatusBar, SafeAreaView, View } from "react-native";
+import HowToApply from "../components/HowToApply";
 import Header from "../header/index";
-import InputSurat from "../components/MultiInput"
+import SectionHeader from "../components/SectionHeader";
 
-const LayananScreen = () => {
+
+export default function AjukanSuratScreen() {
    return (
       <SafeAreaView style={styles.container}>
-         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+         <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
          <Header />
-         <ScrollView style={styles.scrollView}>
+         <ScrollView style={styles.scrollView}>   
             <View style={styles.main}>
                <SectionHeader 
-                     title="Berita Desa" 
-                     subtitle="Informasi terbaru seputar kegiatan tentang desa" 
-                  />
-               <InputSurat />
+                  title="Layanan Surat" 
+                  subtitle="Ajukan permohonan surat keterangan secara online"
+               />
+               <HowToApply />
             </View>
          </ScrollView>
       </SafeAreaView>
    );
-};
+}
 
 const styles = StyleSheet.create({
    container: {
@@ -34,9 +34,8 @@ const styles = StyleSheet.create({
       alignItems: "center",
       padding: 15,
    },
+
    scrollView: {
       flex: 1,
    },
 });
-
-export default LayananScreen;

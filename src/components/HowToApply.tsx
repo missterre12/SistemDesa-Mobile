@@ -21,7 +21,7 @@ const steps = [
    },
    {
       title: "Tunggu Persetujuan",
-      description: "Tunggu persetujuan dari petugas desa (1-5 hari kerja)",
+      description: "Tunggu persetujuan dari petugas desa lewat email (1-5 hari kerja)",
    },
    {
       title: "Ambil Surat",

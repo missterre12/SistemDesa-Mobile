@@ -3,13 +3,17 @@ import { View, StyleSheet, Platform } from 'react-native';
 import Form1 from '../components/ui/Form1';
 import Form2 from '../components/ui/Form2';
 import Form3 from '../components/ui/Form3';
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LayananStackParamList } from '../navigation/LayananStackNavigator';
 import UpperNavigation from '../components/UpperNavigation';
 import axios from 'axios';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 import { useSocket } from '../context/SocketContext';
+import { useNavigation } from "@react-navigation/native";
 
+type LayananNavProp = NativeStackNavigationProp<LayananStackParamList>;
 interface Form1Data {
     // nama?: string;
     email?: string;
@@ -52,6 +56,8 @@ const MultiStepFormScreen: React.FC = () => {
         setCurrentForm(formNumber);
     };
 
+    const navigation = useNavigation<LayananNavProp>();
+
     const submitToServer = async () => {
         const token = await AsyncStorage.getItem('token');
         if (!token) {
@@ -76,7 +82,6 @@ const MultiStepFormScreen: React.FC = () => {
         const appendFile = async (fieldName: string, uri?: string) => {
             if (!uri) return;
 
-            // Determine file name and type from the URI
             const fileName = uri.split('/').pop() || `${fieldName}.jpg`;
             const fileType = `image/${fileName.split('.').pop()}`;
 
@@ -121,6 +126,12 @@ const MultiStepFormScreen: React.FC = () => {
             console.log('Response:', response.data);
 
             socket?.emit("surat:new", { message: "Surat baru dibuat!" });
+            Alert.alert('Sukses', 'Data berhasil dikirim!', [
+            {
+                text: 'OK',
+                onPress: () => navigation.navigate('AjukanSurat'), 
+            },
+        ]);
         } catch (err: any) {
             console.error('Submission error:', err.response?.data || err.message);
             Alert.alert('Gagal', 'Terjadi kesalahan saat mengirim data');
