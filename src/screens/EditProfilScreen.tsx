@@ -90,6 +90,7 @@ export default function EditProfileScreen() {
             formData.append("username", userData.username);
             formData.append("email", userData.email);
             formData.append("alamat", userData.alamat);
+            formData.append("nama", userData.nama);
 
             if (password && password.length >= 6) {
                 formData.append("password", password);
@@ -151,7 +152,7 @@ export default function EditProfileScreen() {
         <ScrollView contentContainerStyle={styles.container}>
             <TouchableOpacity onPress={handlePickImage} style={styles.imageContainer}>
                 {photo ? (
-                    <Image source={{ uri: `${R2_PUBLIC_URL}/${userData.photo_url}` }} style={styles.image} />
+                    <Image source={{uri:photo}} style={styles.image} />
                 ) : (
                     <Text style={styles.imagePlaceholder}>Pick Photo</Text>
                 )}
