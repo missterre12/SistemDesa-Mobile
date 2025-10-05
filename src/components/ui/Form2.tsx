@@ -50,7 +50,7 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
         if (selectedValue && jenisSuratLabel) {
             onDataChange({
                 tujuan_surat: tujuanPengajuan,
-                jenis_surat: jenisSuratLabel, // ✅ store label only
+                jenis_surat: jenisSuratLabel, 
             });
             onSubmit();
         } else {
