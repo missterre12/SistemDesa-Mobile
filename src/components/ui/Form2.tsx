@@ -17,6 +17,8 @@ interface Form2Props {
 const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialData }) => {
     const [tujuanPengajuan, setTujuanPengajuan] = useState<string>('');
     const [jenisSurat, setJenisSurat] = useState<string>('');
+    const [selectedValue, setSelectedValue] = useState<string>('');
+    const [jenisSuratLabel, setJenisSuratLabel] = useState<string>('');
 
     const suratOptions = [
         { label: '-- Pilihlah Jenis Surat --', value: '' },
@@ -44,12 +46,11 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             Alert.alert('Tujuan pengajuan minimal 10 karakter');
             return;
         }
-        if (jenisSurat) {
-            const selectedOption = suratOptions.find(opt => opt.value === jenisSurat);
-            const jenisSuratLabel = selectedOption ? selectedOption.label : jenisSurat;
+
+        if (selectedValue && jenisSuratLabel) {
             onDataChange({
                 tujuan_surat: tujuanPengajuan,
-                jenis_surat: jenisSuratLabel,
+                jenis_surat: jenisSuratLabel, // ✅ store label only
             });
             onSubmit();
         } else {
@@ -84,15 +85,18 @@ const Form2: React.FC<Form2Props> = ({ onSubmit, onPrev, onDataChange, initialDa
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Pilih Jenis Surat</Text>
                 <View style={styles.pickerContainer}>
-                    {/* ✅ FIX: Display the label based on the selected value */}
                     <Text style={styles.pickerLabel}>
-                        {getJenisSuratLabel(jenisSurat)}
+                        {jenisSuratLabel || suratOptions[0].label}
                     </Text>
                     <Picker
-                        selectedValue={jenisSurat}
+                        selectedValue={selectedValue}
                         style={styles.picker}
                         onValueChange={(itemValue) => {
-                            setJenisSurat(itemValue);
+                            setSelectedValue(itemValue);
+                            const selectedOption = suratOptions.find(opt => opt.value === itemValue);
+                            if (selectedOption) {
+                                setJenisSuratLabel(selectedOption.label); // ✅ store the label
+                            }
                         }}
                     >
                         {suratOptions.map((opt) => (
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     },
     picker: {
         height: 50,
-        opacity: 0, 
+        opacity: 0,
     },
     fileFormat: {
         fontSize: 12,
