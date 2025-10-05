@@ -1,9 +1,10 @@
 // File: screens/HomeScreen.tsx
 import React from "react";
-import { ScrollView, StyleSheet, StatusBar, SafeAreaView } from "react-native";
+import { ScrollView, StyleSheet, StatusBar } from "react-native";
 import Jumbotron from "../components/jumbotron";
 import Services from "../components/card-services";
 import Header from "../header/index"; 
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen: React.FC = () => {
   return (
