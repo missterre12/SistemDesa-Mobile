@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 import { useAuth } from './AuthContext';
 
@@ -72,7 +71,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     connectSocket();
-  }, []);
+  }, [user?.user_id]);
 
   const emit = (event: string, data?: any) => {
     if (socket?.connected) {
